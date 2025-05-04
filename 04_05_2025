@@ -1,0 +1,64 @@
+import java.io.*;
+import java.lang.*;
+import java.util.*;
+
+class GFG {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(br.readLine().trim());
+        while (t-- > 0) {
+            String str = br.readLine();
+
+            Solution obj = new Solution();
+            System.out.println(obj.findSubString(str));
+
+            System.out.println("~");
+        }
+    }
+}
+class Solution {
+    public int findSubString(String str) {
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+        Set<Character> distinctChars = new HashSet<>();
+        for (char c : str.toCharArray()) {
+            distinctChars.add(c);
+        }
+        int distinctCount = distinctChars.size();
+        
+        int left = 0;
+        int minLength = Integer.MAX_VALUE;
+        Map<Character, Integer> windowCharCount = new HashMap<>();
+        int windowDistinctCount = 0;
+        
+        for (int right = 0; right < str.length(); right++) {
+            char currentChar = str.charAt(right);
+            windowCharCount.put(currentChar, windowCharCount.getOrDefault(currentChar, 0) + 1);
+            
+            if (windowCharCount.get(currentChar) == 1) {
+                windowDistinctCount++;
+            }
+            while (windowDistinctCount == distinctCount) {
+                // Update the minimum length
+                int currentWindowLength = right - left + 1;
+                if (currentWindowLength < minLength) {
+                    minLength = currentWindowLength;
+                }
+                
+                char leftChar = str.charAt(left);
+                windowCharCount.put(leftChar, windowCharCount.get(leftChar) - 1);
+                
+                // If the count of leftChar becomes zero, we've lost one distinct character
+                if (windowCharCount.get(leftChar) == 0) {
+                    windowDistinctCount--;
+                }
+                
+                left++;
+            }
+        }
+        
+        return minLength;
+        
+    }
+}
