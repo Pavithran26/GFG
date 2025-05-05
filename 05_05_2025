@@ -1,0 +1,51 @@
+import java.util.*;
+class Solution {
+    public int findTarget(int arr[], int target) {
+          int left = 0;
+        int right = arr.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (arr[mid] == target) {
+                return mid;
+            }
+            
+            if (mid > left && arr[mid - 1] == target) {
+                return mid - 1;
+            }
+            
+            if (mid < right && arr[mid + 1] == target) {
+                return mid + 1;
+            }
+            
+            
+            if (arr[mid] > target) {
+                right = mid - 2; // Because mid-1 could be larger, so move two steps left
+            } else {
+                left = mid + 2; 
+            }
+        }
+        
+        return -1;
+        
+    }
+}
+
+public class GFG {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        sc.nextLine();
+        while (t-- > 0) {
+            String temp[] = sc.nextLine().trim().split(" ");
+            int n = temp.length;
+            int arr[] = new int[n];
+            int target = sc.nextInt();
+            if (sc.hasNextLine()) sc.nextLine();
+            for (int i = 0; i < n; i++) arr[i] = Integer.parseInt(temp[i]);
+            Solution sln = new Solution();
+            int ans = sln.findTarget(arr, target);
+            System.out.println(ans);
+            System.out.println("~");
+        }
+    }
+}
