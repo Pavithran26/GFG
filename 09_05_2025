@@ -1,0 +1,91 @@
+//{ Driver Code Starts
+// Initial Template for javascript
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => { inputString += inputStdin; });
+
+process.stdin.on('end', _ => {
+    inputString =
+        inputString.trim().split('\n').map(string => { return string.trim(); });
+
+    main();
+});
+
+function readLine() { return inputString[currentLine++]; }
+
+function main() {
+    let t = parseInt(readLine());
+    let i = 0;
+    for (; i < t; i++) {
+        let k = parseInt(readLine());
+        let str = readLine();
+        let obj = new Solution();
+        console.log(obj.findMaximumNum(str, k));
+
+        console.log("~");
+    }
+}
+// } Driver Code Ends
+
+
+// User function Template for javascript
+
+/**
+ * @param {string} s
+ * @param {number} k
+ * @returns {string}
+ */
+
+class Solution {
+    findMaximumNum(s, k) {
+        let maxNum = s;
+        const digits = s.split('');
+        
+        const backtrack = (position, swapsLeft, currentDigits) => {
+            if (swapsLeft === 0 || position >= currentDigits.length) {
+                const currentStr = currentDigits.join('');
+                if (currentStr > maxNum) {
+                    maxNum = currentStr;
+                }
+                return;
+            }
+            
+            // Find the maximum digit from the remaining positions
+            let maxDigit = currentDigits[position];
+            for (let i = position + 1; i < currentDigits.length; i++) {
+                if (currentDigits[i] > maxDigit) {
+                    maxDigit = currentDigits[i];
+                }
+            }
+            
+            if (maxDigit !== currentDigits[position]) {
+                // We need to swap to get maxDigit to the current position
+                for (let i = position + 1; i < currentDigits.length; i++) {
+                    if (currentDigits[i] === maxDigit) {
+                        // Swap
+                        [currentDigits[position], currentDigits[i]] = [currentDigits[i], currentDigits[position]];
+                        const newStr = currentDigits.join('');
+                        if (newStr > maxNum) {
+                            maxNum = newStr;
+                        }
+                        backtrack(position + 1, swapsLeft - 1, currentDigits.slice());
+                        // Swap back
+                        [currentDigits[position], currentDigits[i]] = [currentDigits[i], currentDigits[position]];
+                    }
+                }
+            } else {
+                // No better digit found, move to next position
+                backtrack(position + 1, swapsLeft, currentDigits.slice());
+            }
+        };
+        
+        backtrack(0, k, digits.slice());
+        return maxNum;
+    }
+}
