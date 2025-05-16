@@ -1,0 +1,85 @@
+//{ Driver Code Starts
+import java.io.*;
+import java.lang.*;
+import java.util.*;
+
+public class DriverClass {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+
+        while (t-- > 0) {
+            int n = sc.nextInt();
+            int k = sc.nextInt();
+            int arr[][] = new int[k][n];
+            for (int i = 0; i < k; i++) {
+                for (int j = 0; j < n; j++) arr[i][j] = sc.nextInt();
+            }
+            ArrayList<Integer> range = new Solution().findSmallestRange(arr);
+            System.out.println(range.get(0) + " " + range.get(1));
+            System.out.println("~");
+        }
+    }
+}
+
+// } Driver Code Ends
+
+class Solution {
+    static class Element {
+        int val;
+        int row;
+        int col;
+        
+        Element(int val, int row, int col) {
+            this.val = val;
+            this.row = row;
+            this.col = col;
+        }
+    }
+    
+    public ArrayList<Integer> findSmallestRange(int[][] arr) {
+        PriorityQueue<Element> minHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
+        int max = Integer.MIN_VALUE;
+        int minRange = Integer.MAX_VALUE;
+        int start = -1, end = -1;
+        
+        // Initialize the min heap with the first element of each array and track the max value
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].length > 0) {
+                Element element = new Element(arr[i][0], i, 0);
+                minHeap.add(element);
+                max = Math.max(max, arr[i][0]);
+            }
+        }
+        
+        while (minHeap.size() == arr.length) {
+            Element minElement = minHeap.poll();
+            int currentMin = minElement.val;
+            int currentRange = max - currentMin;
+            
+            if (currentRange < minRange) {
+                minRange = currentRange;
+                start = currentMin;
+                end = max;
+            } else if (currentRange == minRange && currentMin < start) {
+                start = currentMin;
+                end = max;
+            }
+            
+            // Check if there's a next element in the same row
+            if (minElement.col + 1 < arr[minElement.row].length) {
+                int nextVal = arr[minElement.row][minElement.col + 1];
+                Element nextElement = new Element(nextVal, minElement.row, minElement.col + 1);
+                minHeap.add(nextElement);
+                if (nextVal > max) {
+                    max = nextVal;
+                }
+            }
+        }
+        
+        ArrayList<Integer> result = new ArrayList<>();
+        result.add(start);
+        result.add(end);
+        return result;
+    }
+}
