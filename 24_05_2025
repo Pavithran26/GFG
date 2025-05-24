@@ -1,0 +1,11 @@
+class Solution:
+    def sumSubstrings(self, s):
+        n = len(s)
+        mod = 10**9 + 7  # though the problem says sum fits in 32-bit, so mod might not be needed
+        total = 0
+        prev = 0
+        for i in range(n):
+            current = (prev * 10) + (i + 1) * int(s[i])
+            total += current
+            prev = current
+        return total
