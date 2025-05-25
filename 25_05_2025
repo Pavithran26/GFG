@@ -1,0 +1,18 @@
+class Solution:
+    def pythagoreanTriplet(self, arr):
+        n = len(arr)
+        if n < 3:
+            return False
+        
+        # Create a set to store squared values
+        squared_set = {x * x for x in arr}
+        
+        # Check for each element if there exists a pair that forms a Pythagorean triplet
+        for x in arr:
+            x_squared = x * x
+            for y in arr:
+                if x != y:
+                    y_squared = y * y
+                    if (x_squared + y_squared) in squared_set:
+                        return True
+        return False
