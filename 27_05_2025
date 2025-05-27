@@ -1,0 +1,23 @@
+class Solution:
+    def leafNodes(self, preorder):
+        if not preorder:
+            return []
+        
+        leaves = []
+        stack = []
+        stack.append(preorder[0])
+        
+        for num in preorder[1:]:
+            if num < stack[-1]:
+                stack.append(num)
+            else:
+                last_popped = None
+                while stack and num > stack[-1]:
+                    last_popped = stack.pop()
+                if last_popped is not None:
+                    leaves.append(last_popped)
+                stack.append(num)
+        # The last element in the stack is also a leaf
+        if stack:
+            leaves.append(stack[-1])
+        return leaves
