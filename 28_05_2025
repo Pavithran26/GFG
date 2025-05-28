@@ -1,0 +1,22 @@
+class Solution:    
+    def ValidCorner(self, mat): 
+        rows = len(mat)
+        if rows == 0:
+            return False
+        cols = len(mat[0])
+        # Create a dictionary to map each row to the set of columns with 1s
+        row_cols = {}
+        for i in range(rows):
+            cols_with_1 = set()
+            for j in range(cols):
+                if mat[i][j] == 1:
+                    cols_with_1.add(j)
+            row_cols[i] = cols_with_1
+        
+        # Check all pairs of rows for at least two common columns
+        for i in range(rows):
+            for j in range(i + 1, rows):
+                common_cols = row_cols[i] & row_cols[j]
+                if len(common_cols) >= 2:
+                    return True
+        return False
