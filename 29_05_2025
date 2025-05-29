@@ -1,0 +1,24 @@
+class Solution:
+    def sumOfLongRootToLeafPath(self, root):
+        max_sum = -float('inf')
+        max_len = 0
+        
+        def dfs(node, current_len, current_sum):
+            nonlocal max_sum, max_len
+            if not node:
+                return
+            current_sum += node.data
+            current_len += 1
+            if not node.left and not node.right:
+                if current_len > max_len:
+                    max_len = current_len
+                    max_sum = current_sum
+                elif current_len == max_len:
+                    if current_sum > max_sum:
+                        max_sum = current_sum
+            else:
+                dfs(node.left, current_len, current_sum)
+                dfs(node.right, current_len, current_sum)
+        
+        dfs(root, 0, 0)
+        return max_sum
