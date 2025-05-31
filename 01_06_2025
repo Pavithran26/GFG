@@ -1,0 +1,60 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    int countPairs(int[][] mat1, int[][] mat2, int x) {
+        int n = mat1.length;
+        List<Integer> list1 = new ArrayList<>();
+        List<Integer> list2 = new ArrayList<>();
+        
+        // Flatten mat1 into list1
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                list1.add(mat1[i][j]);
+            }
+        }
+        
+        // Flatten mat2 into list2
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                list2.add(mat2[i][j]);
+            }
+        }
+        
+        int left = 0;
+        int right = list2.size() - 1;
+        int count = 0;
+        
+        while (left < list1.size() && right >= 0) {
+            int sum = list1.get(left) + list2.get(right);
+            if (sum == x) {
+                int a = list1.get(left);
+                int b = list2.get(right);
+                int countA = 1;
+                int countB = 1;
+                
+                // Count duplicates in list1
+                while (left + 1 < list1.size() && list1.get(left + 1) == a) {
+                    left++;
+                    countA++;
+                }
+                
+                // Count duplicates in list2
+                while (right - 1 >= 0 && list2.get(right - 1) == b) {
+                    right--;
+                    countB++;
+                }
+                
+                count += countA * countB;
+                left++;
+                right--;
+            } else if (sum < x) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        
+        return count;
+    }
+}
