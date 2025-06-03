@@ -1,0 +1,32 @@
+import java.util.*;
+
+class Solution {
+    int countSubstr(String s, int k) {
+        return atMostKDistinct(s, k) - atMostKDistinct(s, k - 1);
+    }
+    
+    private int atMostKDistinct(String s, int k) {
+        if (k < 0) return 0;
+        
+        int left = 0, result = 0;
+        Map<Character, Integer> freqMap = new HashMap<>();
+        
+        for (int right = 0; right < s.length(); right++) {
+            char c = s.charAt(right);
+            freqMap.put(c, freqMap.getOrDefault(c, 0) + 1);
+            
+            while (freqMap.size() > k) {
+                char leftChar = s.charAt(left);
+                freqMap.put(leftChar, freqMap.get(leftChar) - 1);
+                if (freqMap.get(leftChar) == 0) {
+                    freqMap.remove(leftChar);
+                }
+                left++;
+            }
+            
+            result += right - left + 1;
+        }
+        
+        return result;
+    }
+}
