@@ -1,0 +1,43 @@
+import java.math.BigInteger;
+
+class Solution {
+    public boolean isSumString(String s) {
+        int n = s.length();
+        // Try all possible splits for the first two numbers
+        for (int i = 1; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                String num1Str = s.substring(0, i);
+                String num2Str = s.substring(i, j);
+                if (hasLeadingZeros(num1Str) || hasLeadingZeros(num2Str)) {
+                    continue;
+                }
+                BigInteger num1 = new BigInteger(num1Str);
+                BigInteger num2 = new BigInteger(num2Str);
+                if (checkRemaining(s, j, num1, num2)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private boolean checkRemaining(String s, int start, BigInteger num1, BigInteger num2) {
+        if (start == s.length()) {
+            return true;
+        }
+        BigInteger sum = num1.add(num2);
+        String sumStr = sum.toString();
+        if (start + sumStr.length() > s.length()) {
+            return false;
+        }
+        String actualSumStr = s.substring(start, start + sumStr.length());
+        if (!sumStr.equals(actualSumStr)) {
+            return false;
+        }
+        return checkRemaining(s, start + sumStr.length(), num2, sum);
+    }
+    
+    private boolean hasLeadingZeros(String s) {
+        return s.length() > 1 && s.charAt(0) == '0';
+    }
+}
