@@ -1,0 +1,31 @@
+class Node {
+    int data;
+    Node left, right;
+
+    Node(int item) {
+        data = item;
+        left = right = null;
+    }
+}
+
+class Solution {
+    public boolean isDeadEnd(Node root) {
+        return isDeadEndUtil(root, 1, Integer.MAX_VALUE);
+    }
+
+    private boolean isDeadEndUtil(Node node, int min, int max) {
+        // Base case: if the node is null, return false (no dead end)
+        if (node == null) {
+            return false;
+        }
+
+        // If the current node's value is equal to the min and max, it's a dead end
+        if (node.data == min && node.data == max) {
+            return true;
+        }
+
+        // Recursively check the left and right subtrees
+        return isDeadEndUtil(node.left, min, node.data - 1) || 
+               isDeadEndUtil(node.right, node.data + 1, max);
+    }
+}
