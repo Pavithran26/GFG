@@ -1,0 +1,67 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    int[] printKClosest(int[] arr, int k, int x) {
+        List<Integer> result = new ArrayList<>();
+        int n = arr.length;
+        int left = findCrossOver(arr, 0, n - 1, x);
+        int right = left + 1;
+        
+        // Handle the case where arr[left] is x, move left leftwards
+        if (left >= 0 && arr[left] == x) {
+            left--;
+        }
+        
+        for (int i = 0; i < k; i++) {
+            if (left >= 0 && right < n) {
+                int diffLeft = Math.abs(arr[left] - x);
+                int diffRight = Math.abs(arr[right] - x);
+                if (diffLeft < diffRight) {
+                    result.add(arr[left]);
+                    left--;
+                } else if (diffLeft > diffRight) {
+                    result.add(arr[right]);
+                    right++;
+                } else {
+                    if (arr[left] > arr[right]) {
+                        result.add(arr[left]);
+                        left--;
+                    } else {
+                        result.add(arr[right]);
+                        right++;
+                    }
+                }
+            } else if (left >= 0) {
+                result.add(arr[left]);
+                left--;
+            } else if (right < n) {
+                result.add(arr[right]);
+                right++;
+            }
+        }
+        
+        int[] res = new int[result.size()];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = result.get(i);
+        }
+        return res;
+    }
+    
+    private int findCrossOver(int[] arr, int low, int high, int x) {
+        if (arr[high] <= x) {
+            return high;
+        }
+        if (arr[low] > x) {
+            return low;
+        }
+        int mid = low + (high - low) / 2;
+        if (arr[mid] <= x && arr[mid + 1] > x) {
+            return mid;
+        } else if (arr[mid] < x) {
+            return findCrossOver(arr, mid + 1, high, x);
+        } else {
+            return findCrossOver(arr, low, mid - 1, x);
+        }
+    }
+}
