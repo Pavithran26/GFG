@@ -1,0 +1,37 @@
+class Solution {
+    public int kokoEat(int[] arr, int k) {
+        int left = 1;
+        int right = getMax(arr);
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (canEatAll(arr, mid, k)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+    
+    private boolean canEatAll(int[] piles, int s, int k) {
+        int totalHours = 0;
+        for (int bananas : piles) {
+            totalHours += (bananas + s - 1) / s;
+            if (totalHours > k) {
+                return false;
+            }
+        }
+        return totalHours <= k;
+    }
+    
+    private int getMax(int[] arr) {
+        int max = 0;
+        for (int num : arr) {
+            if (num > max) {
+                max = num;
+            }
+        }
+        return max;
+    }
+}
