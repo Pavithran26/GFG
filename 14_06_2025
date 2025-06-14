@@ -1,0 +1,33 @@
+*/
+class Node {
+    int data;
+    Node left;
+    Node right;
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+*/
+class Solution {
+    public boolean isSymmetric(Node root) {
+        if (root == null) {
+            return true; // An empty tree is symmetric
+        }
+        return isMirror(root.left, root.right);
+    }
+
+    private boolean isMirror(Node left, Node right) {
+        if (left == null && right == null) {
+            return true; // Both nodes are null
+        }
+        if (left == null || right == null) {
+            return false; // One of the nodes is null
+        }
+        // Check if the current nodes are equal and their subtrees are mirrors
+        return (left.data == right.data) &&
+               isMirror(left.left, right.right) &&
+               isMirror(left.right, right.left);
+    }
+}
