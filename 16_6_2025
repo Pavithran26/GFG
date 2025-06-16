@@ -1,0 +1,33 @@
+class Solution {
+    public int minCost(int[] heights, int[] cost) {
+        int left = 1;
+        int right = 10000; // As per constraints, heights can be up to 1e4
+        long minCost = Long.MAX_VALUE;
+        
+        while (left <= right) {
+            int mid1 = left + (right - left) / 3;
+            int mid2 = right - (right - left) / 3;
+            
+            long cost1 = computeCost(heights, cost, mid1);
+            long cost2 = computeCost(heights, cost, mid2);
+            
+            if (cost1 < cost2) {
+                right = mid2 - 1;
+                minCost = Math.min(minCost, cost1);
+            } else {
+                left = mid1 + 1;
+                minCost = Math.min(minCost, cost2);
+            }
+        }
+        
+        return (int) minCost;
+    }
+    
+    private long computeCost(int[] heights, int[] cost, int target) {
+        long totalCost = 0;
+        for (int i = 0; i < heights.length; i++) {
+            totalCost += (long) Math.abs(target - heights[i]) * cost[i];
+        }
+        return totalCost;
+    }
+}
