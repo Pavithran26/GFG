@@ -1,0 +1,39 @@
+import java.util.ArrayList;
+
+class Solution {
+    public ArrayList<ArrayList<String>> palinParts(String s) {
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        ArrayList<String> currentPartition = new ArrayList<>();
+        backtrack(s, 0, currentPartition, result);
+        return result;
+    }
+    
+    private void backtrack(String s, int start, ArrayList<String> currentPartition, ArrayList<ArrayList<String>> result) {
+        if (start == s.length()) {
+            result.add(new ArrayList<>(currentPartition));
+            return;
+        }
+        
+        for (int end = start + 1; end <= s.length(); end++) {
+            String substring = s.substring(start, end);
+            if (isPalindrome(substring)) {
+                currentPartition.add(substring);
+                backtrack(s, end, currentPartition, result);
+                currentPartition.remove(currentPartition.size() - 1);
+            }
+        }
+    }
+    
+    private boolean isPalindrome(String s) {
+        int left = 0;
+        int right = s.length() - 1;
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
