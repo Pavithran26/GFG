@@ -1,0 +1,39 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+class Solution {
+    public static String caseSort(String s) {
+        ArrayList<Character> lowerChars = new ArrayList<>();
+        ArrayList<Character> upperChars = new ArrayList<>();
+        
+        // Separate lowercase and uppercase characters
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (Character.isLowerCase(c)) {
+                lowerChars.add(c);
+            } else {
+                upperChars.add(c);
+            }
+        }
+        
+        // Sort both lists
+        Collections.sort(lowerChars);
+        Collections.sort(upperChars);
+        
+        // Use two pointers to reconstruct the string
+        int lowerIndex = 0;
+        int upperIndex = 0;
+        StringBuilder result = new StringBuilder();
+        
+        for (int i = 0; i < s.length(); i++) {
+            char originalChar = s.charAt(i);
+            if (Character.isLowerCase(originalChar)) {
+                result.append(lowerChars.get(lowerIndex++));
+            } else {
+                result.append(upperChars.get(upperIndex++));
+            }
+        }
+        
+        return result.toString();
+    }
+}
