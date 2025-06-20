@@ -1,0 +1,31 @@
+import java.util.*;
+
+class Solution {
+    public boolean validgroup(int[] arr, int k) {
+        if (arr.length % k != 0) {
+            return false;
+        }
+        
+        TreeMap<Integer, Integer> frequencyMap = new TreeMap<>();
+        for (int num : arr) {
+            frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+        }
+        
+        while (!frequencyMap.isEmpty()) {
+            int firstNum = frequencyMap.firstKey();
+            for (int i = 0; i < k; i++) {
+                int currentNum = firstNum + i;
+                if (!frequencyMap.containsKey(currentNum)) {
+                    return false;
+                }
+                int count = frequencyMap.get(currentNum);
+                if (count == 1) {
+                    frequencyMap.remove(currentNum);
+                } else {
+                    frequencyMap.put(currentNum, count - 1);
+                }
+            }
+        }
+        return true;
+    }
+}
