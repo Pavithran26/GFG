@@ -1,0 +1,38 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public int catchThieves(char[] arr, int k) {
+        List<Integer> policeIndices = new ArrayList<>();
+        List<Integer> thiefIndices = new ArrayList<>();
+        
+        // Separate the indices of police and thieves
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == 'P') {
+                policeIndices.add(i);
+            } else if (arr[i] == 'T') {
+                thiefIndices.add(i);
+            }
+        }
+        
+        int p = 0, t = 0;
+        int caught = 0;
+        
+        while (p < policeIndices.size() && t < thiefIndices.size()) {
+            int policePos = policeIndices.get(p);
+            int thiefPos = thiefIndices.get(t);
+            
+            if (Math.abs(policePos - thiefPos) <= k) {
+                caught++;
+                p++;
+                t++;
+            } else if (policePos < thiefPos) {
+                p++;
+            } else {
+                t++;
+            }
+        }
+        
+        return caught;
+    }
+}
