@@ -1,0 +1,26 @@
+class Solution {
+  public:
+    vector<int> largestSubset(vector<int>& arr) {
+        // Code here
+        int n=arr.size();
+        sort(arr.begin(),arr.end());
+        vector<vector<int>> dp(n);
+        vector<int> best;
+        for(int i=0;i<n;i++){
+            vector<int> maxsubset;
+            for (int j=0;j<i;j++){
+                if(arr[i]%arr[j]==0){
+                    if(dp[j].size()>maxsubset.size()||dp[j].size()==maxsubset.size()&&dp[j]>maxsubset){
+                        maxsubset = dp[j];
+                    }
+                }
+            }
+            dp[i]=maxsubset;
+            dp[i].push_back(arr[i]);
+            if(dp[i].size()>best.size()||dp[i].size()==best.size()&&dp[i]>best){
+                best=dp[i];
+            }
+        }
+        return best;
+    }
+};
