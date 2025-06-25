@@ -1,0 +1,40 @@
+import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    boolean sameFreq(String s) {
+        Map<Character, Integer> freqMap = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            freqMap.put(c, freqMap.getOrDefault(c, 0) + 1);
+        }
+        
+        Map<Integer, Integer> countMap = new HashMap<>();
+        for (int freq : freqMap.values()) {
+            countMap.put(freq, countMap.getOrDefault(freq, 0) + 1);
+        }
+        
+        if (countMap.size() == 1) {
+            return true;
+        }
+        if (countMap.size() > 2) {
+            return false;
+        }
+        
+        int[] keys = new int[2];
+        int i = 0;
+        for (int key : countMap.keySet()) {
+            keys[i++] = key;
+        }
+        int k1 = keys[0];
+        int k2 = keys[1];
+        
+        if ((k1 == 1 && countMap.get(k1) == 1) || (k2 == 1 && countMap.get(k2) == 1)) {
+            return true;
+        }
+        if ((Math.abs(k1 - k2) == 1) && (countMap.get(Math.max(k1, k2)) == 1)) {
+            return true;
+        }
+        
+        return false;
+    }
+}
