@@ -1,0 +1,35 @@
+//Game with String
+
+import java.util.*;
+
+class Solution {
+    public int minValue(String s, int k) {
+        // Create a frequency map for each character
+        Map<Character, Integer> frequencyMap = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            frequencyMap.put(c, frequencyMap.getOrDefault(c, 0) + 1);
+        }
+        
+        // Use a max heap to always get the character with the highest frequency
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        maxHeap.addAll(frequencyMap.values());
+        
+        // Process k elements
+        while (k > 0 && !maxHeap.isEmpty()) {
+            int current = maxHeap.poll();
+            current--; // reduce the frequency by 1
+            if (current > 0) {
+                maxHeap.offer(current);
+            }
+            k--;
+        }
+        
+        // Calculate the sum of squares
+        int sum = 0;
+        for (int freq : maxHeap) {
+            sum += freq * freq;
+        }
+        
+        return sum;
+    }
+}
