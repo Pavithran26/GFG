@@ -1,0 +1,35 @@
+//Counting elements in two arrays
+import java.util.ArrayList;
+import java.util.Arrays;
+
+class Solution {
+    public static ArrayList<Integer> countLessEq(int a[], int b[]) {
+        ArrayList<Integer> result = new ArrayList<>();
+        Arrays.sort(b); // Sort array b for binary search
+        
+        for (int num : a) {
+            // Binary search to find the first index where element > num
+            int index = upperBound(b, num);
+            result.add(index);
+        }
+        
+        return result;
+    }
+    
+    // Helper method to find the upper bound (first element > key)
+    private static int upperBound(int[] arr, int key) {
+        int left = 0;
+        int right = arr.length;
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (arr[mid] <= key) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        
+        return left; // Returns the count of elements <= key
+    }
+}
