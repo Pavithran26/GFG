@@ -1,0 +1,38 @@
+//Split Array Largest Sum
+
+class Solution {
+    public int splitArray(int[] arr, int k) {
+        int left = 0;
+        int right = 0;
+        for (int num : arr) {
+            left = Math.max(left, num);
+            right += num;
+        }
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (isPossible(arr, k, mid)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+    
+    private boolean isPossible(int[] arr, int k, int maxSum) {
+        int sum = 0;
+        int count = 1;
+        for (int num : arr) {
+            sum += num;
+            if (sum > maxSum) {
+                sum = num;
+                count++;
+                if (count > k) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
