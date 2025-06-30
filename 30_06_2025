@@ -1,0 +1,46 @@
+//Max min Height
+class Solution {
+    public int maxMinHeight(int[] arr, int k, int w) {
+        int left = Integer.MAX_VALUE;
+        int right = Integer.MIN_VALUE;
+        for (int num : arr) {
+            left = Math.min(left, num);
+            right = Math.max(right, num + k);
+        }
+        
+        int ans = left;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (isPossible(arr, mid, k, w)) {
+                ans = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return ans;
+    }
+    
+    private boolean isPossible(int[] arr, int target, int k, int w) {
+        int n = arr.length;
+        int[] diff = new int[n + 1];
+        int current = 0;
+        int operations = 0;
+        
+        for (int i = 0; i < n; i++) {
+            current += diff[i];
+            int needed = target - (arr[i] + current);
+            if (needed > 0) {
+                operations += needed;
+                if (operations > k) {
+                    return false;
+                }
+                current += needed;
+                if (i + w < n) {
+                    diff[i + w] -= needed;
+                }
+            }
+        }
+        return operations <= k;
+    }
+}
