@@ -1,0 +1,24 @@
+//Substrings of length k with k-1 distinct elements
+
+import java.util.HashMap;
+
+class Solution {
+    public int substrCount(String s, int k) {
+        int count = 0;
+        for (int i = 0; i <= s.length() - k; i++) {
+            String substring = s.substring(i, i + k);
+            if (countDistinct(substring) == k - 1) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    private int countDistinct(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        return map.size();
+    }
+}
