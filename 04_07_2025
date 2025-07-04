@@ -1,0 +1,30 @@
+import java.util.HashMap;
+
+class Solution {
+    public int countAtMostK(int[] arr, int k) {
+        if (k == 0) return 0;
+        
+        HashMap<Integer, Integer> freqMap = new HashMap<>();
+        int left = 0;
+        int count = 0;
+        
+        for (int right = 0; right < arr.length; right++) {
+            // Add the current element to the frequency map
+            freqMap.put(arr[right], freqMap.getOrDefault(arr[right], 0) + 1);
+            
+            // Shrink the window from the left if the number of distinct elements exceeds k
+            while (freqMap.size() > k) {
+                freqMap.put(arr[left], freqMap.get(arr[left]) - 1);
+                if (freqMap.get(arr[left]) == 0) {
+                    freqMap.remove(arr[left]);
+                }
+                left++;
+            }
+            
+            // All subarrays ending at 'right' with at most k distinct elements are valid
+            count += right - left + 1;
+        }
+        
+        return count;
+    }
+}
