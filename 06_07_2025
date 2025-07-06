@@ -1,0 +1,59 @@
+//Maximum Sum Combination
+
+import java.util.*;
+
+class Solution {
+    public ArrayList<Integer> topKSumPairs(int[] a, int[] b, int k) {
+        // Sort both arrays in descending order
+        Arrays.sort(a);
+        Arrays.sort(b);
+        reverseArray(a);
+        reverseArray(b);
+        
+        int n = a.length;
+        PriorityQueue<int[]> maxHeap = new PriorityQueue<>((x, y) -> Integer.compare(y[0], x[0]));
+        HashSet<String> visited = new HashSet<>();
+        
+        // Initial candidate: sum of the two largest elements
+        maxHeap.offer(new int[]{a[0] + b[0], 0, 0});
+        visited.add(0 + "," + 0);
+        
+        ArrayList<Integer> result = new ArrayList<>();
+        
+        while (k > 0 && !maxHeap.isEmpty()) {
+            int[] current = maxHeap.poll();
+            int sum = current[0];
+            int i = current[1];
+            int j = current[2];
+            
+            result.add(sum);
+            k--;
+            
+            // Next candidate: (i+1, j)
+            if (i + 1 < n && !visited.contains((i + 1) + "," + j)) {
+                maxHeap.offer(new int[]{a[i + 1] + b[j], i + 1, j});
+                visited.add((i + 1) + "," + j);
+            }
+            
+            // Next candidate: (i, j+1)
+            if (j + 1 < n && !visited.contains(i + "," + (j + 1))) {
+                maxHeap.offer(new int[]{a[i] + b[j + 1], i, j + 1});
+                visited.add(i + "," + (j + 1));
+            }
+        }
+        
+        return result;
+    }
+    
+    private void reverseArray(int[] arr) {
+        int left = 0;
+        int right = arr.length - 1;
+        while (left < right) {
+            int temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+            left++;
+            right--;
+        }
+    }
+}
