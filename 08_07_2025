@@ -1,0 +1,39 @@
+//Next element with greater frequency
+
+import java.util.*;
+
+class Solution {
+    public ArrayList<Integer> findGreater(int[] arr) {
+        ArrayList<Integer> result = new ArrayList<>();
+        if (arr.length == 0) return result;
+        
+        // Step 1: Calculate the frequency of each element
+        Map<Integer, Integer> frequencyMap = new HashMap<>();
+        for (int num : arr) {
+            frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+        }
+        
+        // Step 2: Initialize a stack to help find the next greater frequency element
+        Stack<Integer> stack = new Stack<>();
+        int[] res = new int[arr.length];
+        
+        // Process the array from right to left
+        for (int i = arr.length - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && frequencyMap.get(stack.peek()) <= frequencyMap.get(arr[i])) {
+                stack.pop();
+            }
+            if (stack.isEmpty()) {
+                res[i] = -1;
+            } else {
+                res[i] = stack.peek();
+            }
+            stack.push(arr[i]);
+        }
+        
+        // Convert the result array to ArrayList
+        for (int num : res) {
+            result.add(num);
+        }
+        return result;
+    }
+}
