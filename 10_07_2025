@@ -1,0 +1,67 @@
+//Find the longest string
+import java.util.Arrays;
+import java.util.Comparator;
+
+class Solution {
+    static class TrieNode {
+        TrieNode[] children = new TrieNode[26];
+        boolean isEndOfWord = false;
+    }
+
+    static class Trie {
+        TrieNode root;
+
+        Trie() {
+            root = new TrieNode();
+        }
+
+        void insert(String word) {
+            TrieNode node = root;
+            for (char c : word.toCharArray()) {
+                int index = c - 'a';
+                if (node.children[index] == null) {
+                    node.children[index] = new TrieNode();
+                }
+                node = node.children[index];
+            }
+            node.isEndOfWord = true;
+        }
+
+        boolean hasAllPrefixes(String word) {
+            TrieNode node = root;
+            for (char c : word.toCharArray()) {
+                int index = c - 'a';
+                if (node.children[index] == null || !node.children[index].isEndOfWord) {
+                    return false;
+                }
+                node = node.children[index];
+            }
+            return true;
+        }
+    }
+
+    public String longestString(String[] arr) {
+        Trie trie = new Trie();
+        for (String s : arr) {
+            trie.insert(s);
+        }
+
+        Arrays.sort(arr, new Comparator<String>() {
+            @Override
+            public int compare(String a, String b) {
+                if (a.length() != b.length()) {
+                    return b.length() - a.length();
+                } else {
+                    return a.compareTo(b);
+                }
+            }
+        });
+
+        for (String s : arr) {
+            if (trie.hasAllPrefixes(s)) {
+                return s;
+            }
+        }
+        return "";
+    }
+}
