@@ -1,0 +1,36 @@
+//Cutting Binary String
+
+import java.util.HashSet;
+import java.util.Set;
+
+class Solution {
+    public int cuts(String s) {
+        int n = s.length();
+        Set<String> powerOf5 = new HashSet<>();
+        long num = 1;
+        powerOf5.add(Long.toBinaryString(num));
+        for (int i = 1; i <= 20; i++) {
+            num *= 5;
+            powerOf5.add(Long.toBinaryString(num));
+        }
+        
+        int[] dp = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            dp[i] = Integer.MAX_VALUE;
+            for (int j = 0; j < i; j++) {
+                String substring = s.substring(j, i);
+                if (substring.charAt(0) == '0') {
+                    continue;
+                }
+                if (powerOf5.contains(substring)) {
+                    if (j == 0) {
+                        dp[i] = 1;
+                    } else if (dp[j] != Integer.MAX_VALUE) {
+                        dp[i] = Math.min(dp[i], dp[j] + 1);
+                    }
+                }
+            }
+        }
+        return dp[n] == Integer.MAX_VALUE ? -1 : dp[n];
+    }
+}
