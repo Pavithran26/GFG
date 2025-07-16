@@ -1,0 +1,82 @@
+//Nine Divisors
+
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public static int countNumbers(int n) {
+        int count = 0;
+        
+        // Check for numbers of form p^8 where p is prime
+        for (int p = 2; ; p++) {
+            long num = (long) Math.pow(p, 8);
+            if (num <= n) {
+                if (isPrime(p)) {
+                    count++;
+                }
+            } else {
+                break;
+            }
+        }
+        
+        // Check for numbers of form p^2 * q^2 where p and q are distinct primes
+        int sqrtN = (int) Math.sqrt(n);
+        List<Integer> primes = generatePrimesUpTo(sqrtN);
+        
+        for (int i = 0; i < primes.size(); i++) {
+            for (int j = i + 1; j < primes.size(); j++) {
+                long p = primes.get(i);
+                long q = primes.get(j);
+                long product = p * p * q * q;
+                if (product <= n) {
+                    count++;
+                } else {
+                    break; // since primes are sorted, further q's will only be larger
+                }
+            }
+        }
+        
+        return count;
+    }
+    
+    private static boolean isPrime(int num) {
+        if (num <= 1) {
+            return false;
+        }
+        if (num == 2) {
+            return true;
+        }
+        if (num % 2 == 0) {
+            return false;
+        }
+        for (int i = 3; i * i <= num; i += 2) {
+            if (num % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private static List<Integer> generatePrimesUpTo(int limit) {
+        boolean[] sieve = new boolean[limit + 1];
+        for (int i = 2; i <= limit; i++) {
+            sieve[i] = true;
+        }
+        
+        for (int p = 2; p * p <= limit; p++) {
+            if (sieve[p]) {
+                for (int multiple = p * p; multiple <= limit; multiple += p) {
+                    sieve[multiple] = false;
+                }
+            }
+        }
+        
+        List<Integer> primes = new ArrayList<>();
+        for (int i = 2; i <= limit; i++) {
+            if (sieve[i]) {
+                primes.add(i);
+            }
+        }
+        return primes;
+    }
+}
