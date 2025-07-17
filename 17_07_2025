@@ -1,0 +1,67 @@
+//Power of k in factorial of n
+
+import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public int maxKPower(int n, int k) {
+        // Step 1: Prime factorization of k
+        Map<Integer, Integer> primeFactors = getPrimeFactors(k);
+        
+        int minX = Integer.MAX_VALUE;
+        
+        for (Map.Entry<Integer, Integer> entry : primeFactors.entrySet()) {
+            int p = entry.getKey();
+            int e = entry.getValue();
+            
+            // Step 2: Calculate exponent of p in n!
+            int exponentInFactorial = getExponentInFactorial(n, p);
+            
+            // Step 3: Determine x for this prime as exponentInFactorial / e
+            int x = exponentInFactorial / e;
+            
+            if (x < minX) {
+                minX = x;
+            }
+        }
+        
+        return minX;
+    }
+    
+    private Map<Integer, Integer> getPrimeFactors(int k) {
+        Map<Integer, Integer> factors = new HashMap<>();
+        if (k == 1) {
+            return factors;
+        }
+        
+        // Handle 2 separately
+        while (k % 2 == 0) {
+            factors.put(2, factors.getOrDefault(2, 0) + 1);
+            k /= 2;
+        }
+        
+        // Check for odd divisors up to sqrt(k)
+        for (int i = 3; i <= Math.sqrt(k); i += 2) {
+            while (k % i == 0) {
+                factors.put(i, factors.getOrDefault(i, 0) + 1);
+                k /= i;
+            }
+        }
+        
+        // If remaining k is a prime > 2
+        if (k > 1) {
+            factors.put(k, factors.getOrDefault(k, 0) + 1);
+        }
+        
+        return factors;
+    }
+    
+    private int getExponentInFactorial(int n, int p) {
+        int exponent = 0;
+        while (n > 0) {
+            n /= p;
+            exponent += n;
+        }
+        return exponent;
+    }
+}
