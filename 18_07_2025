@@ -1,0 +1,39 @@
+class Solution {
+    long gcd(long a, long b) {
+        while (b != 0) {
+            long temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+    
+    long lcm(long a, long b) {
+        return (a * b) / gcd(a, b);
+    }
+    
+    long lcmThree(long a, long b, long c) {
+        long lcmAB = lcm(a, b);
+        return lcm(lcmAB, c);
+    }
+    
+    int lcmTriplets(int n) {
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+        if (n == 3) return 6;
+        if (n == 4) return 12;
+        if (n == 5) return 60;
+        if (n == 6) return 60;
+        if (n == 7) return 210;
+        
+        if (n % 2 != 0) {
+            return (int) ((long)n * (n - 1) * (n - 2));
+        } else {
+            if (n % 3 == 0) {
+                return (int) ((long)(n - 1) * (n - 2) * (n - 3));
+            } else {
+                return (int) ((long)n * (n - 1) * (n - 3));
+            }
+        }
+    }
+}
