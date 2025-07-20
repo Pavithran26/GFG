@@ -1,0 +1,38 @@
+//Count Numbers Containing Specific Digits
+
+import java.util.HashSet;
+import java.util.Set;
+
+class Solution {
+    public int countValid(int n, int[] arr) {
+        Set<Integer> digits = new HashSet<>();
+        for (int num : arr) {
+            digits.add(num);
+        }
+        
+        int totalNumbers = 9 * (int) Math.pow(10, n - 1);
+        int excludedNumbers = countExcludedNumbers(n, digits);
+        return totalNumbers - excludedNumbers;
+    }
+    
+    private int countExcludedNumbers(int n, Set<Integer> forbiddenDigits) {
+        Set<Integer> allowedFirstDigits = new HashSet<>();
+        for (int i = 1; i <= 9; i++) {
+            if (!forbiddenDigits.contains(i)) {
+                allowedFirstDigits.add(i);
+            }
+        }
+        int firstDigitOptions = allowedFirstDigits.size();
+        
+        Set<Integer> allowedOtherDigits = new HashSet<>();
+        for (int i = 0; i <= 9; i++) {
+            if (!forbiddenDigits.contains(i)) {
+                allowedOtherDigits.add(i);
+            }
+        }
+        int otherDigitOptions = allowedOtherDigits.size();
+        
+        int excluded = firstDigitOptions * (int) Math.pow(otherDigitOptions, n - 1);
+        return excluded;
+    }
+}
