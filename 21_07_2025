@@ -1,0 +1,51 @@
+//Count the Coprimes
+
+import java.util.*;
+
+class Solution {
+    int cntCoprime(int[] arr) {
+        int maxElement = 0;
+        for (int num : arr) {
+            if (num > maxElement) {
+                maxElement = num;
+            }
+        }
+        
+        int[] frequency = new int[maxElement + 1];
+        for (int num : arr) {
+            frequency[num]++;
+        }
+        
+        int[] mobius = new int[maxElement + 1];
+        Arrays.fill(mobius, 1);
+        boolean[] isPrime = new boolean[maxElement + 1];
+        Arrays.fill(isPrime, true);
+        
+        for (int p = 2; p <= maxElement; p++) {
+            if (isPrime[p]) {
+                for (int multiple = p; multiple <= maxElement; multiple += p) {
+                    isPrime[multiple] = (multiple == p) ? isPrime[multiple] : false;
+                    mobius[multiple] *= -1;
+                }
+                int pSquare = p * p;
+                for (int multiple = pSquare; multiple <= maxElement; multiple += pSquare) {
+                    mobius[multiple] = 0;
+                }
+            }
+        }
+        
+        int totalPairs = 0;
+        for (int d = 1; d <= maxElement; d++) {
+            if (mobius[d] == 0) {
+                continue;
+            }
+            int count = 0;
+            for (int multiple = d; multiple <= maxElement; multiple += d) {
+                count += frequency[multiple];
+            }
+            totalPairs += mobius[d] * count * (count - 1) / 2;
+        }
+        
+        return totalPairs;
+    }
+}
