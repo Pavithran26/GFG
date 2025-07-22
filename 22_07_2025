@@ -1,0 +1,50 @@
+//Smallest Positive Missing
+
+class Solution {
+    public int missingNumber(int[] arr) {
+        int n = arr.length;
+        
+        // Step 1: Replace non-positive numbers and numbers greater than n with 1
+        boolean containsOne = false;
+        for (int i = 0; i < n; i++) {
+            if (arr[i] == 1) {
+                containsOne = true;
+                break;
+            }
+        }
+        
+        if (!containsOne) {
+            return 1;
+        }
+        
+        // If 1 is present, then ignore other numbers by setting them to 1
+        for (int i = 0; i < n; i++) {
+            if (arr[i] <= 0 || arr[i] > n) {
+                arr[i] = 1;
+            }
+        }
+        
+        // Step 2: Use index as a hash key and mark the presence of numbers
+        for (int i = 0; i < n; i++) {
+            int num = Math.abs(arr[i]);
+            if (num == n) {
+                arr[0] = -Math.abs(arr[0]);
+            } else {
+                arr[num] = -Math.abs(arr[num]);
+            }
+        }
+        
+        // Step 3: Find the first cell which isn't negative
+        for (int i = 1; i < n; i++) {
+            if (arr[i] > 0) {
+                return i;
+            }
+        }
+        
+        if (arr[0] > 0) {
+            return n;
+        }
+        
+        return n + 1;
+    }
+}
