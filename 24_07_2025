@@ -1,0 +1,19 @@
+//Last Moment Before All Ants Fall Out
+import java.util.Arrays;
+
+class Solution {
+    public int getLastMoment(int n, int[] left, int[] right) {
+        int maxLeft = 0;
+        int maxRight = 0;
+        
+        if (left.length > 0) {
+            maxLeft = Arrays.stream(left).max().getAsInt();
+        }
+        
+        if (right.length > 0) {
+            maxRight = n - Arrays.stream(right).min().getAsInt();
+        }
+        
+        return Math.max(maxLeft, maxRight);
+    }
+}
