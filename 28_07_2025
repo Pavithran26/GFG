@@ -1,0 +1,41 @@
+//Make Matrix Beautiful
+class Solution {
+    public static int balanceSums(int[][] mat) {
+        int n = mat.length;
+        int[] rowSums = new int[n];
+        int[] colSums = new int[n];
+        
+        // Calculate row and column sums
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                rowSums[i] += mat[i][j];
+                colSums[j] += mat[i][j];
+            }
+        }
+        
+        // Find the maximum row sum and maximum column sum
+        int maxRowSum = 0;
+        for (int sum : rowSums) {
+            if (sum > maxRowSum) {
+                maxRowSum = sum;
+            }
+        }
+        
+        int maxColSum = 0;
+        for (int sum : colSums) {
+            if (sum > maxColSum) {
+                maxColSum = sum;
+            }
+        }
+        
+        int target = Math.max(maxRowSum, maxColSum);
+        
+        // Calculate the total operations needed
+        int totalOperations = 0;
+        for (int sum : rowSums) {
+            totalOperations += target - sum;
+        }
+        
+        return totalOperations;
+    }
+}
