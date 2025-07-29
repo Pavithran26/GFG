@@ -1,0 +1,39 @@
+//ASCII Range Sum
+import java.util.ArrayList;
+import java.util.HashMap;
+
+class Solution {
+    public ArrayList<Integer> asciirange(String s) {
+        HashMap<Character, Integer> firstOccurrence = new HashMap<>();
+        HashMap<Character, Integer> lastOccurrence = new HashMap<>();
+        
+        // Record first and last occurrences of each character
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (!firstOccurrence.containsKey(c)) {
+                firstOccurrence.put(c, i);
+            }
+            lastOccurrence.put(c, i);
+        }
+        
+        ArrayList<Integer> result = new ArrayList<>();
+        
+        // Iterate through each character in the firstOccurrence map
+        for (char c : firstOccurrence.keySet()) {
+            int first = firstOccurrence.get(c);
+            int last = lastOccurrence.get(c);
+            
+            if (first != last) {
+                int sum = 0;
+                for (int i = first + 1; i < last; i++) {
+                    sum += s.charAt(i);
+                }
+                if (sum != 0) {
+                    result.add(sum);
+                }
+            }
+        }
+        
+        return result;
+    }
+}
