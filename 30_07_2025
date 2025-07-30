@@ -1,0 +1,21 @@
+//Subarrays with sum K
+import java.util.HashMap;
+
+class Solution {
+    public int cntSubarrays(int[] arr, int k) {
+        HashMap<Integer, Integer> prefixSumCount = new HashMap<>();
+        prefixSumCount.put(0, 1); // To handle the case where the subarray starts from index 0
+        int count = 0;
+        int currentSum = 0;
+        
+        for (int num : arr) {
+            currentSum += num;
+            if (prefixSumCount.containsKey(currentSum - k)) {
+                count += prefixSumCount.get(currentSum - k);
+            }
+            prefixSumCount.put(currentSum, prefixSumCount.getOrDefault(currentSum, 0) + 1);
+        }
+        
+        return count;
+    }
+}
