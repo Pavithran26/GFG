@@ -1,5 +1,6 @@
 //Powerful Integer
-public int powerfulInteger(int[][] intervals, int k) {
+class Solution {
+    public int powerfulInteger(int[][] intervals, int k) {
     TreeMap<Integer, Integer> delta = new TreeMap<>();
     for (int[] interval : intervals) {
         delta.put(interval[0], delta.getOrDefault(interval[0], 0) + 1);
@@ -14,4 +15,6 @@ public int powerfulInteger(int[][] intervals, int k) {
         prev = point;
     }
     return ans;
+}
+
 }
