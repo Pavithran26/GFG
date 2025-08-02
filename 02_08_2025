@@ -1,0 +1,29 @@
+//Longest Subarray with Majority Greater than K
+class Solution:
+    def longestSubarray(self, arr, k):
+        transformed = []
+        for num in arr:
+            if num > k:
+                transformed.append(1)
+            else:
+                transformed.append(-1)
+        
+        prefix_sum = 0
+        sum_indices = {0: -1}  # To handle the case where the subarray starts from index 0
+        max_len = 0
+        
+        for i in range(len(transformed)):
+            prefix_sum += transformed[i]
+            
+            # We need prefix_sum - (some s) > 0 => s < prefix_sum
+            # So, check if (prefix_sum - 1) exists in the map
+            # The smallest s possible is prefix_sum - 1, so that prefix_sum - s = 1 > 0
+            # So, find the earliest occurrence of (prefix_sum - 1)
+            if (prefix_sum - 1) in sum_indices:
+                max_len = max(max_len, i - sum_indices[prefix_sum - 1])
+            
+            # Store the first occurrence of the prefix_sum
+            if prefix_sum not in sum_indices:
+                sum_indices[prefix_sum] = i
+        
+        return max_len
