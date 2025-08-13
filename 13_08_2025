@@ -1,0 +1,36 @@
+//Tywin's War Strategy
+import java.util.*;
+
+class Solution {
+    public int minSoldiers(int[] arr, int k) {
+        int n = arr.length;
+        int requiredLucky = (n + 1) / 2; // ceil of n/2
+        int currentLucky = 0;
+        List<Integer> costList = new ArrayList<>();
+
+        for (int num : arr) {
+            if (num % k == 0) {
+                currentLucky++;
+            } else {
+                costList.add(k - (num % k)); // soldiers needed to make it divisible by k
+            }
+        }
+
+        // Already have enough lucky troops
+        if (currentLucky >= requiredLucky) {
+            return 0;
+        }
+
+        // Sort to convert cheapest troops first
+        Collections.sort(costList);
+
+        int soldiersAdded = 0;
+        int toConvert = requiredLucky - currentLucky;
+
+        for (int i = 0; i < toConvert; i++) {
+            soldiersAdded += costList.get(i);
+        }
+
+        return soldiersAdded;
+    }
+}
