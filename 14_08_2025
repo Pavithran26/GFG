@@ -1,12 +1,49 @@
-//2264. Largest 3-Same-Digit Number in String
+//Count Reverse Pairs
 class Solution {
-    public String largestGoodInteger(String num) {
-        for (int i = 9; i >= 0; i--) {
-            String s = String.valueOf(i).repeat(3);
-            if (num.contains(s)) {
-                return s;
+    public int countRevPairs(int[] arr) {
+        return mergeSort(arr, 0, arr.length - 1);
+    }
+    
+    private int mergeSort(int[] arr, int left, int right) {
+        if (left >= right) return 0;
+        int mid = (left + right) / 2;
+        int count = 0;
+        count += mergeSort(arr, left, mid);
+        count += mergeSort(arr, mid + 1, right);
+        count += countCrossPairs(arr, left, mid, right);
+        merge(arr, left, mid, right); // merge both sorted parts
+        return count;
+    }
+    
+    // Count pairs where i in left half and j in right half
+    private int countCrossPairs(int[] arr, int left, int mid, int right) {
+        int count = 0;
+        int j = mid + 1;
+        for (int i = left; i <= mid; i++) {
+            // Find the first j such that arr[i] <= 2*arr[j]
+            while (j <= right && arr[i] > 2L * arr[j]) {
+                j++;
             }
+            count += (j - (mid + 1));
         }
-        return "";
+        return count;
+    }
+    
+    // Merge two sorted halves [left, mid] and [mid+1, right]
+    private void merge(int[] arr, int left, int mid, int right) {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+        int[] leftArr = new int[n1];
+        int[] rightArr = new int[n2];
+        for (int i = 0; i < n1; i++) leftArr[i] = arr[left + i];
+        for (int i = 0; i < n2; i++) rightArr[i] = arr[mid + 1 + i];
+
+        int i = 0, j = 0, k = left;
+        while (i < n1 && j < n2) {
+            if (leftArr[i] <= rightArr[j]) arr[k++] = leftArr[i++];
+            else arr[k++] = rightArr[j++];
+        }
+        while (i < n1) arr[k++] = leftArr[i++];
+        while (j < n2) arr[k++] = rightArr[j++];
     }
 }
