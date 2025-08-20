@@ -1,0 +1,38 @@
+//Search in fully rotated sorted 2D matrix
+class Solution {
+    public boolean searchMatrix(int[][] mat, int x) {
+        int n = mat.length;
+        if (n == 0) return false;
+        int m = mat[0].length;
+        int left = 0, right = n * m - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            int row = mid / m;
+            int col = mid % m;
+            int val = mat[row][col];
+            if (val == x) {
+                return true;
+            }
+            // Find the start and end elements for comparisons.
+            int leftRow = left / m, leftCol = left % m;
+            int rightRow = right / m, rightCol = right % m;
+            int leftVal = mat[leftRow][leftCol];
+            int rightVal = mat[rightRow][rightCol];
+            
+            if (leftVal <= val) { // Left half is sorted
+                if (x >= leftVal && x < val) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else { // Right half is sorted
+                if (x > val && x <= rightVal) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        }
+        return false;
+    }
+}
