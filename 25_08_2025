@@ -1,0 +1,49 @@
+//Allocate Minimum Pages
+class Solution {
+    private boolean isPossible(int[] arr, int k, int maxPages) {
+        int requiredStudents = 1;
+        int currentSum = 0;
+        for (int pages : arr) {
+            if (pages > maxPages) {
+                return false; // single book pages exceed maxPages
+            }
+            if (currentSum + pages > maxPages) {
+                requiredStudents++;
+                currentSum = pages;
+                if (requiredStudents > k) {
+                    return false;
+                }
+            } else {
+                currentSum += pages;
+            }
+        }
+        return true;
+    }
+
+    public int findPages(int[] arr, int k) {
+        if (arr.length < k) {
+            return -1;
+        }
+
+        int low = 0, high = 0;
+        for (int pages : arr) {
+            high += pages;
+            if (pages > low) {
+                low = pages; // minimum max pages can't be less than the largest book
+            }
+        }
+
+        int result = -1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (isPossible(arr, k, mid)) {
+                result = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+
+        return result;
+    }
+}
