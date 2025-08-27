@@ -1,0 +1,23 @@
+//Count the number of possible triangles
+class Solution {
+    public int countTriangles(int arr[]) {
+        int n = arr.length;
+        int count = 0;
+        Arrays.sort(arr);
+        // Fix the largest side one by one
+        for (int i = n - 1; i >= 2; i--) {
+            int left = 0, right = i - 1;
+            while (left < right) {
+                // If arr[left] + arr[right] > arr[i], it forms a triangle
+                if (arr[left] + arr[right] > arr[i]) {
+                    // All elements between left and right will also form triangles
+                    count += (right - left);
+                    right--;
+                } else {
+                    left++;
+                }
+            }
+        }
+        return count;
+    }
+}
