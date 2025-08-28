@@ -1,0 +1,15 @@
+//Maximize Number of 1's
+class Solution {
+    public int maxOnes(int arr[], int k) {
+        int maxConsec = 0, left = 0, zeros = 0;
+        for (int right = 0; right < arr.length; right++) {
+            if (arr[right] == 0) zeros++;
+            while (zeros > k) {
+                if (arr[left] == 0) zeros--;
+                left++;
+            }
+            maxConsec = Math.max(maxConsec, right - left + 1);
+        }
+        return maxConsec;
+    }
+}
