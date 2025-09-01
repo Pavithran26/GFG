@@ -1,0 +1,52 @@
+//Sum of Mode
+import java.util.*;
+
+class Solution {
+    public int sumOfModes(int[] arr, int k) {
+        // Use TreeMap so we always know the smallest element with max freq
+        Map<Integer, Integer> freq = new HashMap<>();
+        // Map of freq => set of values at that freq (for ties)
+        TreeMap<Integer, TreeSet<Integer>> invFreq = new TreeMap<>();
+        
+        int n = arr.length;
+        int sum = 0;
+        
+        for (int i = 0; i < n; i++) {
+            // Adding new value to freq map
+            int x = arr[i];
+            int oldFreq = freq.getOrDefault(x, 0);
+            
+            if (oldFreq > 0) {
+                invFreq.get(oldFreq).remove(x);
+                if (invFreq.get(oldFreq).isEmpty()) invFreq.remove(oldFreq);
+            }
+            
+            freq.put(x, oldFreq + 1);
+            invFreq.computeIfAbsent(oldFreq + 1, z -> new TreeSet<>()).add(x);
+            
+            // Remove value outside window
+            if (i >= k) {
+                int y = arr[i - k];
+                int yFreq = freq.get(y);
+                invFreq.get(yFreq).remove(y);
+                if (invFreq.get(yFreq).isEmpty()) invFreq.remove(yFreq);
+                if (yFreq == 1) {
+                    freq.remove(y);
+                } else {
+                    freq.put(y, yFreq - 1);
+                    invFreq.computeIfAbsent(yFreq - 1, z -> new TreeSet<>()).add(y);
+                }
+            }
+            
+            // When window is fully formed, get mode
+            if (i >= k - 1) {
+                // Highest frequency key
+                int maxFreq = invFreq.lastKey();
+                // Smallest element with that freq
+                int mode = invFreq.get(maxFreq).first();
+                sum += mode;
+            }
+        }
+        return sum;
+    }
+}
