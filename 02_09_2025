@@ -1,0 +1,63 @@
+//Swap Kth nodes from ends
+/*
+class Node {
+    int data;
+    Node next;
+
+    Node(int x) {
+        data = x;
+        next = null;
+    }
+}
+*/
+class Solution {
+    public Node swapKth(Node head, int k) {
+        int n = 0;
+        Node curr = head;
+
+        // Count the number of nodes in the linked list
+        while (curr != null) {
+            n++;
+            curr = curr.next;
+        }
+
+        // If k is more than number of nodes, no swap
+        if (k > n) return head;
+        // If kth from start and end are same, do nothing
+        if (2 * k - 1 == n) return head;
+
+        // Find kth node from start (kthStart) and its previous node (prevStart)
+        Node prevStart = null, kthStart = head;
+        for (int i = 1; i < k; i++) {
+            prevStart = kthStart;
+            kthStart = kthStart.next;
+        }
+
+        // Find kth node from end (kthEnd) and its previous node (prevEnd)
+        Node prevEnd = null, kthEnd = head;
+        for (int i = 1; i < n - k + 1; i++) {
+            prevEnd = kthEnd;
+            kthEnd = kthEnd.next;
+        }
+
+        // If previous node to kthStart exists, link it to kthEnd
+        if (prevStart != null)
+            prevStart.next = kthEnd;
+        else // Changing head if kthStart was head
+            head = kthEnd;
+
+        // If previous node to kthEnd exists, link it to kthStart
+        if (prevEnd != null)
+            prevEnd.next = kthStart;
+        else // Changing head if kthEnd was head
+            head = kthStart;
+
+        // Swap next pointers
+        Node temp = kthStart.next;
+        kthStart.next = kthEnd.next;
+        kthEnd.next = temp;
+
+        return head;
+    }
+}
+
