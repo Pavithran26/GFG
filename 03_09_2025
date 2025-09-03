@@ -1,0 +1,38 @@
+//Reverse a Doubly Linked List
+/*
+class Node {
+    int data;
+    Node next;
+    Node prev;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+        this.prev = null;
+    }
+}
+*/
+class Solution {
+    public Node reverse(Node head) {
+        Node current = head;
+        Node temp = null;
+        
+        // Traverse the list and swap next and prev pointers for each node
+        while (current != null) {
+            // Swap prev and next
+            temp = current.prev;
+            current.prev = current.next;
+            current.next = temp;
+            
+            // Move to next node in the original list (which is prev due to swap)
+            current = current.prev;
+        }
+        
+        // At the end, temp will point to the new head's prev, so reset head
+        if (temp != null) {
+            head = temp.prev;
+        }
+        
+        return head;
+    }
+}
