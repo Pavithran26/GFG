@@ -1,0 +1,41 @@
+//Linked List Group Reverse
+/*
+class Node
+{
+    int data;
+    Node next;
+    Node(int key)
+    {
+        data = key;
+        next = null;
+    }
+}
+*/
+class Solution {
+    public Node reverseKGroup(Node head, int k) {
+        if (head == null || k <= 1) return head;
+
+        // Reverse first k nodes or fewer if list ends before k
+        Node curr = head;
+        Node prev = null;
+        Node next = null;
+        int count = 0;
+
+        // Reverse at least one node and up to k nodes
+        while (curr != null && count < k) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+            count++;
+        }
+
+        // Now, head is the last node of the reversed group, link to recursively reversed rest
+        if (next != null) {
+            head.next = reverseKGroup(next, k);
+        }
+
+        // 'prev' is the new head of the reversed group
+        return prev; 
+    }
+}
