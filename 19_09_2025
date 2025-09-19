@@ -1,0 +1,19 @@
+//Min Add to Make Parentheses Valid
+class Solution {
+    public int minParentheses(String s) {
+        int open = 0;        // Count unmatched '('
+        int insertions = 0;  // Count needed ')'
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                open++;
+            } else { // c == ')'
+                if (open == 0) {
+                    insertions++; // Need an extra '('
+                } else {
+                    open--; // Match with previous '('
+                }
+            }
+        }
+        return open + insertions; // Unmatched '(' + unmatched ')'
+    }
+}
