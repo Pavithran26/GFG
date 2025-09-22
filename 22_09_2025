@@ -1,0 +1,54 @@
+//Max of min for every window size
+class Solution {
+    public ArrayList<Integer> maxOfMins(int[] arr) {
+        int n = arr.length;
+        ArrayList<Integer> result = new ArrayList<>();
+        
+        // Initialize result with all zeros
+        for (int i = 0; i < n; i++) {
+            result.add(0);
+        }
+        
+        // Arrays to store next smaller element indices
+        int[] left = new int[n];
+        int[] right = new int[n];
+        
+        Stack<Integer> stack = new Stack<>();
+        
+        // Find next smaller element on left
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+                stack.pop();
+            }
+            left[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
+        }
+        
+        stack.clear();
+        
+        // Find next smaller element on right
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+                stack.pop();
+            }
+            right[i] = stack.isEmpty() ? n : stack.peek();
+            stack.push(i);
+        }
+        
+        // For each element, determine the window sizes where it can be minimum
+        for (int i = 0; i < n; i++) {
+            // Length of window where arr[i] is minimum
+            int len = right[i] - left[i] - 1;
+            
+            // arr[i] is a candidate for result[len-1]
+            result.set(len - 1, Math.max(result.get(len - 1), arr[i]));
+        }
+        
+        // Some entries in result might be 0, fill them with values from right
+        for (int i = n - 2; i >= 0; i--) {
+            result.set(i, Math.max(result.get(i), result.get(i + 1)));
+        }
+        
+        return result;
+    }
+}
