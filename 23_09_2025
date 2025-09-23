@@ -1,0 +1,19 @@
+//Queue Reversal
+import java.util.Queue;
+import java.util.Stack;
+
+class Solution {
+    public void reverseQueue(Queue<Integer> q) {
+        Stack<Integer> stack = new Stack<>();
+        
+        // Remove all elements from the queue and push them onto the stack
+        while (!q.isEmpty()) {
+            stack.push(q.remove());
+        }
+        
+        // Pop all elements from the stack and add them back to the queue
+        while (!stack.isEmpty()) {
+            q.add(stack.pop());
+        }
+    }
+}
