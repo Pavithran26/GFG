@@ -1,0 +1,53 @@
+//Design MinMax Queue
+import java.util.*;
+
+class SpecialQueue {
+    Queue<Integer> q;
+    Deque<Integer> minDeque;
+    Deque<Integer> maxDeque;
+
+    public SpecialQueue() {
+        q = new LinkedList<>();
+        minDeque = new ArrayDeque<>();
+        maxDeque = new ArrayDeque<>();
+    }
+
+    public void enqueue(int x) {
+        q.offer(x);
+
+        // Maintain minDeque
+        while (!minDeque.isEmpty() && minDeque.getLast() > x) {
+            minDeque.pollLast();
+        }
+        minDeque.offerLast(x);
+
+        // Maintain maxDeque
+        while (!maxDeque.isEmpty() && maxDeque.getLast() < x) {
+            maxDeque.pollLast();
+        }
+        maxDeque.offerLast(x);
+    }
+
+    public void dequeue() {
+        if (q.isEmpty()) return;
+        int val = q.poll();
+        if (!minDeque.isEmpty() && minDeque.getFirst() == val) {
+            minDeque.pollFirst();
+        }
+        if (!maxDeque.isEmpty() && maxDeque.getFirst() == val) {
+            maxDeque.pollFirst();
+        }
+    }
+
+    public int getFront() {
+        return q.isEmpty() ? -1 : q.peek();
+    }
+
+    public int getMin() {
+        return minDeque.isEmpty() ? -1 : minDeque.getFirst();
+    }
+
+    public int getMax() {
+        return maxDeque.isEmpty() ? -1 : maxDeque.getFirst();
+    }
+}
