@@ -1,0 +1,23 @@
+//Rotate Deque By K
+import java.util.Deque;
+
+public class Solution {
+    public static void rotateDeque(Deque<Integer> dq, int type, int k) {
+        int size = dq.size();
+        if (size == 0) return;
+        k = k % size;
+        if (k == 0) return;
+
+        if (type == 1) { // Right Rotation
+            for (int i = 0; i < k; ++i) {
+                int last = dq.removeLast();
+                dq.addFirst(last);
+            }
+        } else if (type == 2) { // Left Rotation
+            for (int i = 0; i < k; ++i) {
+                int first = dq.removeFirst();
+                dq.addLast(first);
+            }
+        }
+    }
+}
