@@ -1,0 +1,25 @@
+//Minimum K Consecutive Bit Flips
+class Solution {
+    public int kBitFlips(int[] arr, int k) {
+        int n = arr.length;
+        int[] diff = new int[n + 1]; // Difference array to track flips
+        int flips = 0; // Total flips performed
+        int currentFlip = 0; // Active flips affecting current bit
+
+        for (int i = 0; i < n; i++) {
+            currentFlip += diff[i];  // Update current flips count based on diff array
+
+            // If current bit after flips is 0 (needs flipping)
+            if ((arr[i] + currentFlip) % 2 == 0) {
+                if (i + k > n) {
+                    return -1; // Cannot flip k bits starting from i
+                }
+                flips++;        // Increment flip count
+                currentFlip++;  // Flip affects this position now
+                diff[i]++;      // Mark start of flip
+                diff[i + k]--;  // Mark end of flip
+            }
+        }
+        return flips;
+    }
+}
