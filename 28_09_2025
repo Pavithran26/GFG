@@ -1,0 +1,42 @@
+//Longest Bounded-Difference Subarray
+import java.util.*;
+
+class Solution {
+    public ArrayList<Integer> longestSubarray(int[] arr, int x) {
+        int n = arr.length;
+        int left = 0, right = 0;
+        int maxLen = 0, startIdx = 0;
+        // TreeMap to keep elements sorted
+        TreeMap<Integer, Integer> window = new TreeMap<>();
+        
+        while (right < n) {
+            // Add current element to the window
+            window.put(arr[right], window.getOrDefault(arr[right], 0) + 1);
+            
+            // Shrink window if difference between min and max exceeds x
+            while (window.lastKey() - window.firstKey() > x) {
+                window.put(arr[left], window.get(arr[left]) - 1);
+                if (window.get(arr[left]) == 0) {
+                    window.remove(arr[left]);
+                }
+                left++;
+            }
+            
+            // Update result if current window is longer
+            if (right - left + 1 > maxLen) {
+                maxLen = right - left + 1;
+                startIdx = left;
+            }
+            
+            right++;
+        }
+        
+        // Prepare result
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = startIdx; i < startIdx + maxLen; i++) {
+            result.add(arr[i]);
+        }
+        
+        return result;
+    }
+}
