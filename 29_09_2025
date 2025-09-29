@@ -1,0 +1,39 @@
+//Maximum subarray sum 2
+import java.util.*;
+
+class Solution {
+    public int maxSubarrSum(int[] arr, int a, int b) {
+        int n = arr.length;
+        
+        // Calculate prefix sum array
+        int[] prefix = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + arr[i];
+        }
+        
+        // Use a deque to maintain indices of prefix sums in increasing order
+        Deque<Integer> deque = new LinkedList<>();
+        int maxSum = Integer.MIN_VALUE;
+        
+        // Process windows of size between a and b
+        for (int i = a; i <= n; i++) {
+            // Remove indices that are out of the valid range (i - b to i - a)
+            while (!deque.isEmpty() && deque.peekFirst() < i - b) {
+                deque.pollFirst();
+            }
+            
+            // Add the current starting point (i - a) to deque while maintaining increasing order
+            while (!deque.isEmpty() && prefix[deque.peekLast()] >= prefix[i - a]) {
+                deque.pollLast();
+            }
+            deque.addLast(i - a);
+            
+            // Calculate maximum sum for current ending position i
+            if (!deque.isEmpty()) {
+                maxSum = Math.max(maxSum, prefix[i] - prefix[deque.peekFirst()]);
+            }
+        }
+        
+        return maxSum;
+    }
+}
