@@ -1,0 +1,22 @@
+//Generate all binary strings
+class Solution {
+    public ArrayList<String> binstr(int n) {
+        ArrayList<String> result = new ArrayList<>();
+        generateBinaryStrings("", n, result);
+        return result;
+    }
+    
+    private void generateBinaryStrings(String current, int n, ArrayList<String> result) {
+        // Base case: when current string length equals n
+        if (current.length() == n) {
+            result.add(current);
+            return;
+        }
+        
+        // Add '0' and continue
+        generateBinaryStrings(current + "0", n, result);
+        
+        // Add '1' and continue
+        generateBinaryStrings(current + "1", n, result);
+    }
+}
