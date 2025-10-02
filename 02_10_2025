@@ -1,0 +1,39 @@
+//Unique K-Number Sum
+class Solution {
+    public ArrayList<ArrayList<Integer>> combinationSum(int n, int k) {
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        ArrayList<Integer> current = new ArrayList<>();
+        backtrack(result, current, 1, n, k, 0);
+        return result;
+    }
+    
+    private void backtrack(ArrayList<ArrayList<Integer>> result, ArrayList<Integer> current, 
+                          int start, int target, int k, int sum) {
+        // Base case: if we've used exactly k numbers and sum equals target
+        if (current.size() == k) {
+            if (sum == target) {
+                result.add(new ArrayList<>(current));
+            }
+            return;
+        }
+        
+        // Try all possible numbers from start to 9
+        for (int i = start; i <= 9; i++) {
+            // Early termination if sum exceeds target or we can't reach target with remaining numbers
+            if (sum + i > target) {
+                continue;
+            }
+            
+            // Early termination if remaining numbers are insufficient
+            int remainingNumbers = k - current.size();
+            if (9 - i + 1 < remainingNumbers) {
+                continue;
+            }
+            
+            // Add current number and recurse
+            current.add(i);
+            backtrack(result, current, i + 1, target, k, sum + i);
+            current.remove(current.size() - 1); // backtrack
+        }
+    }
+}
