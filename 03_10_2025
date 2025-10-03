@@ -1,0 +1,58 @@
+//Possible Words From Phone Digits
+class Solution {
+    // Mapping of digits to letters
+    private static final String[] KEYPAD = {
+        "",     // 0
+        "",     // 1
+        "abc",  // 2
+        "def",  // 3
+        "ghi",  // 4
+        "jkl",  // 5
+        "mno",  // 6
+        "pqrs", // 7
+        "tuv",  // 8
+        "wxyz"  // 9
+    };
+    
+    public ArrayList<String> possibleWords(int[] arr) {
+        ArrayList<String> result = new ArrayList<>();
+        if (arr == null || arr.length == 0) {
+            return result;
+        }
+        
+        // Filter out 0 and 1 from the input array
+        ArrayList<Integer> filteredDigits = new ArrayList<>();
+        for (int digit : arr) {
+            if (digit != 0 && digit != 1) {
+                filteredDigits.add(digit);
+            }
+        }
+        
+        if (filteredDigits.isEmpty()) {
+            return result;
+        }
+        
+        generateWords(filteredDigits, 0, new StringBuilder(), result);
+        return result;
+    }
+    
+    private void generateWords(ArrayList<Integer> digits, int index, 
+                              StringBuilder current, ArrayList<String> result) {
+        // Base case: if we've processed all digits, add the current word
+        if (index == digits.size()) {
+            result.add(current.toString());
+            return;
+        }
+        
+        // Get the current digit and its corresponding letters
+        int digit = digits.get(index);
+        String letters = KEYPAD[digit];
+        
+        // For each letter corresponding to the current digit, recurse
+        for (int i = 0; i < letters.length(); i++) {
+            current.append(letters.charAt(i)); // Choose
+            generateWords(digits, index + 1, current, result); // Explore
+            current.deleteCharAt(current.length() - 1); // Unchoose (backtrack)
+        }
+    }
+}
