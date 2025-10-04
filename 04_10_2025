@@ -1,0 +1,48 @@
+//Expression Add Operators
+import java.util.*;
+
+class Solution {
+    public ArrayList<String> findExpr(String s, int target) {
+        ArrayList<String> result = new ArrayList<>();
+        backtrack(s, target, 0, 0, 0, "", result);
+        Collections.sort(result); // Sort for lexicographically smallest order
+        return result;
+    }
+    
+    private void backtrack(String s, int target, int index, long eval, long prev, String expr, ArrayList<String> result) {
+        // Base case: processed all characters
+        if (index == s.length()) {
+            if (eval == target) {
+                result.add(expr);
+            }
+            return;
+        }
+        
+        // Try all possible substrings starting from current index
+        for (int i = index; i < s.length(); i++) {
+            // Skip numbers with leading zeros (except single zero)
+            if (i > index && s.charAt(index) == '0') {
+                break;
+            }
+            
+            // Parse current number
+            long current = Long.parseLong(s.substring(index, i + 1));
+            
+            // If this is the first number, just initialize
+            if (index == 0) {
+                backtrack(s, target, i + 1, current, current, expr + current, result);
+            } else {
+                // Try addition
+                backtrack(s, target, i + 1, eval + current, current, expr + "+" + current, result);
+                
+                // Try subtraction  
+                backtrack(s, target, i + 1, eval - current, -current, expr + "-" + current, result);
+                
+                // Try multiplication - need to handle precedence
+                // For multiplication, we need to subtract the previous value and add (prev * current)
+                // because multiplication has higher precedence
+                backtrack(s, target, i + 1, eval - prev + (prev * current), prev * current, expr + "*" + current, result);
+            }
+        }
+    }
+}
