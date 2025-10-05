@@ -1,0 +1,70 @@
+//Rat in a Maze
+import java.util.*;
+
+class Solution {
+    public ArrayList<String> ratInMaze(int[][] maze) {
+        ArrayList<String> result = new ArrayList<>();
+        int n = maze.length;
+        
+        // If start or end is blocked, return empty list
+        if (maze[0][0] == 0 || maze[n-1][n-1] == 0) {
+            return result;
+        }
+        
+        // Create visited matrix
+        boolean[][] visited = new boolean[n][n];
+        
+        // Start DFS from (0,0)
+        findPaths(maze, 0, 0, visited, "", result);
+        
+        // Sort to ensure lexicographically smallest order
+        Collections.sort(result);
+        return result;
+    }
+    
+    private void findPaths(int[][] maze, int row, int col, boolean[][] visited, 
+                          String path, ArrayList<String> result) {
+        int n = maze.length;
+        
+        // If we reached destination
+        if (row == n-1 && col == n-1) {
+            result.add(path);
+            return;
+        }
+        
+        // Mark current cell as visited
+        visited[row][col] = true;
+        
+        // Try all 4 directions in lexicographical order: D, L, R, U
+        // Down
+        if (isSafe(maze, row + 1, col, visited)) {
+            findPaths(maze, row + 1, col, visited, path + "D", result);
+        }
+        
+        // Left
+        if (isSafe(maze, row, col - 1, visited)) {
+            findPaths(maze, row, col - 1, visited, path + "L", result);
+        }
+        
+        // Right
+        if (isSafe(maze, row, col + 1, visited)) {
+            findPaths(maze, row, col + 1, visited, path + "R", result);
+        }
+        
+        // Up
+        if (isSafe(maze, row - 1, col, visited)) {
+            findPaths(maze, row - 1, col, visited, path + "U", result);
+        }
+        
+        // Backtrack: unmark current cell
+        visited[row][col] = false;
+    }
+    
+    private boolean isSafe(int[][] maze, int row, int col, boolean[][] visited) {
+        int n = maze.length;
+        
+        // Check if within bounds, not blocked, and not visited
+        return (row >= 0 && row < n && col >= 0 && col < n && 
+                maze[row][col] == 1 && !visited[row][col]);
+    }
+}
