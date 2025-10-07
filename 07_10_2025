@@ -1,0 +1,71 @@
+//Bottom View of Binary Tree
+/*
+class Node {
+    int data;
+    Node left;
+    Node right;
+
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+*/
+
+class Solution {
+    public ArrayList<Integer> bottomView(Node root) {
+        ArrayList<Integer> result = new ArrayList<>();
+        if (root == null) return result;
+        
+        // TreeMap to store horizontal distance -> node data
+        // TreeMap keeps entries sorted by key
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        
+        // Queue for level order traversal
+        // We'll store nodes along with their horizontal distance
+        Queue<Pair<Node, Integer>> queue = new LinkedList<>();
+        queue.add(new Pair<>(root, 0));
+        
+        while (!queue.isEmpty()) {
+            Pair<Node, Integer> current = queue.poll();
+            Node node = current.getKey();
+            int hd = current.getValue();
+            
+            // Always update the map with current node for this horizontal distance
+            // This ensures we get the bottom-most node (last node in level order)
+            map.put(hd, node.data);
+            
+            // Add left child with horizontal distance = hd - 1
+            if (node.left != null) {
+                queue.add(new Pair<>(node.left, hd - 1));
+            }
+            
+            // Add right child with horizontal distance = hd + 1
+            if (node.right != null) {
+                queue.add(new Pair<>(node.right, hd + 1));
+            }
+        }
+        
+        // Add values from map to result list (already sorted by horizontal distance)
+        for (int value : map.values()) {
+            result.add(value);
+        }
+        
+        return result;
+    }
+    
+    // Helper Pair class since Java doesn't have built-in Pair
+    class Pair<K, V> {
+        private K key;
+        private V value;
+        
+        public Pair(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+        
+        public K getKey() { return key; }
+        public V getValue() { return value; }
+    }
+}
