@@ -1,0 +1,64 @@
+//ZigZag Tree Traversal
+/*
+class Node {
+    int data;
+    Node left,right;
+    Node(int d)
+    {
+        data=d;
+        left=right=null;
+    }
+}
+*/
+
+class Solution {
+    ArrayList<Integer> zigZagTraversal(Node root) {
+        ArrayList<Integer> result = new ArrayList<>();
+        
+        // Edge case: empty tree
+        if (root == null) {
+            return result;
+        }
+        
+        // Queue for BFS
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        
+        // Flag to track direction (true for left to right, false for right to left)
+        boolean leftToRight = true;
+        
+        while (!queue.isEmpty()) {
+            int levelSize = queue.size();
+            ArrayList<Integer> currentLevel = new ArrayList<>();
+            
+            // Process all nodes at current level
+            for (int i = 0; i < levelSize; i++) {
+                Node currentNode = queue.poll();
+                currentLevel.add(currentNode.data);
+                
+                // Add children to queue for next level
+                if (currentNode.left != null) {
+                    queue.add(currentNode.left);
+                }
+                if (currentNode.right != null) {
+                    queue.add(currentNode.right);
+                }
+            }
+            
+            // Add current level to result in appropriate order
+            if (leftToRight) {
+                // Add as-is (left to right)
+                result.addAll(currentLevel);
+            } else {
+                // Reverse the current level (right to left)
+                Collections.reverse(currentLevel);
+                result.addAll(currentLevel);
+            }
+            
+            // Toggle direction for next level
+            leftToRight = !leftToRight;
+        }
+        
+        return result;
+    }
+}
