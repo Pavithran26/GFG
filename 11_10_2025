@@ -1,0 +1,34 @@
+//Maximum path sum
+/*
+class Node{
+    int data;
+    Node left, right;
+    Node(int d){
+        data=d;
+        left=right=null;
+    }
+}
+*/
+class Solution {
+    int maxSum = Integer.MIN_VALUE;
+    
+    int findMaxSum(Node root) {
+        maxPathSum(root);
+        return maxSum;
+    }
+    
+    private int maxPathSum(Node node) {
+        if (node == null) return 0;
+        
+        // Recursively get maximum path sum from left and right subtrees
+        // We take max with 0 to ignore negative paths
+        int leftSum = Math.max(0, maxPathSum(node.left));
+        int rightSum = Math.max(0, maxPathSum(node.right));
+        
+        // Update global maximum - path that goes through current node
+        maxSum = Math.max(maxSum, leftSum + rightSum + node.data);
+        
+        // Return the maximum path sum that can be extended to parent
+        return Math.max(leftSum, rightSum) + node.data;
+    }
+}
