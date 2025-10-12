@@ -1,0 +1,39 @@
+//Distribute Candies
+/*
+class Node {
+    int data;
+    Node left;
+    Node right;
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+*/
+
+class Solution {
+    private int moves;
+    
+    public int distCandy(Node root) {
+        moves = 0;
+        dfs(root);
+        return moves;
+    }
+    
+    private int dfs(Node node) {
+        if (node == null) return 0;
+        
+        // Calculate excess/deficit for left and right subtrees
+        int leftExcess = dfs(node.left);
+        int rightExcess = dfs(node.right);
+        
+        // Add moves required for transferring between current node and children
+        moves += Math.abs(leftExcess) + Math.abs(rightExcess);
+        
+        // Return the excess/deficit for current subtree
+        // (node.data - 1) represents current node's excess/deficit
+        // leftExcess + rightExcess represents children's excess/deficit
+        return node.data - 1 + leftExcess + rightExcess;
+    }
+}
