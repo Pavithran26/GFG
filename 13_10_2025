@@ -1,0 +1,39 @@
+//Maximum Non-Adjacent Nodes Sum
+/*
+class Node {
+    int data;
+    Node left, right;
+
+    Node(int data)
+    {
+        this.data = data;
+        this.left = null;
+        this.right = null;
+    }
+}
+*/
+
+class Solution {
+    public int getMaxSum(Node root) {
+        int[] result = dfs(root);
+        return Math.max(result[0], result[1]);
+    }
+    
+    private int[] dfs(Node node) {
+        if (node == null) {
+            return new int[]{0, 0};
+        }
+        
+        // Recursively calculate for left and right subtrees
+        int[] left = dfs(node.left);
+        int[] right = dfs(node.right);
+        
+        // If we include current node, we cannot include its children
+        int include = node.data + left[1] + right[1];
+        
+        // If we exclude current node, we can choose to include or exclude children
+        int exclude = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        
+        return new int[]{include, exclude};
+    }
+}
