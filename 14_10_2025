@@ -1,0 +1,38 @@
+//Sum of Nodes in BST Range
+/*
+class Node {
+    int data;
+    Node left, right;
+    Node(int val) {
+        data = val;
+        left = right = null;
+    }
+}
+*/
+
+class Solution {
+    public int nodeSum(Node root, int l, int r) {
+        if (root == null) return 0;
+        
+        int sum = 0;
+        
+        // If current node is within range, add its value
+        if (root.data >= l && root.data <= r) {
+            sum += root.data;
+        }
+        
+        // If current node is greater than l, explore left subtree
+        // (there might be nodes in range in left subtree)
+        if (root.data > l) {
+            sum += nodeSum(root.left, l, r);
+        }
+        
+        // If current node is less than r, explore right subtree
+        // (there might be nodes in range in right subtree)
+        if (root.data < r) {
+            sum += nodeSum(root.right, l, r);
+        }
+        
+        return sum;
+    }
+}
