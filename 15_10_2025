@@ -1,0 +1,31 @@
+//k-th Smallest in BST
+class Solution {
+    private int count = 0;
+    private int result = -1;
+    
+    public int kthSmallest(Node root, int k) {
+        count = 0;
+        result = -1;
+        inOrderTraversal(root, k);
+        return result;
+    }
+    
+    private void inOrderTraversal(Node node, int k) {
+        if (node == null || count >= k) {
+            return;
+        }
+        
+        // Traverse left subtree
+        inOrderTraversal(node.left, k);
+        
+        // Process current node
+        count++;
+        if (count == k) {
+            result = node.data;
+            return;
+        }
+        
+        // Traverse right subtree
+        inOrderTraversal(node.right, k);
+    }
+}
