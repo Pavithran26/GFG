@@ -1,0 +1,31 @@
+//BST to greater sum tree
+class Solution {
+    private int sum = 0;
+    
+    public static void transformTree(Node root) {
+        // Create instance and call helper method
+        Solution solution = new Solution();
+        solution.transform(root);
+    }
+    
+    private void transform(Node node) {
+        if (node == null) {
+            return;
+        }
+        
+        // Traverse right subtree first (greater values)
+        transform(node.right);
+        
+        // Store current node's original value
+        int originalValue = node.data;
+        
+        // Update current node with accumulated sum
+        node.data = sum;
+        
+        // Add original value to accumulated sum for smaller nodes
+        sum += originalValue;
+        
+        // Traverse left subtree (smaller values)
+        transform(node.left);
+    }
+}
