@@ -1,0 +1,75 @@
+//Median of BST
+/*
+class Node {
+    int data;
+    Node left;
+    Node right;
+
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+*/
+
+class Solution {
+    public int findMedian(Node root) {
+        // Count total nodes
+        int n = countNodes(root);
+        
+        if (n % 2 == 1) {
+            // Odd case: find ((n+1)/2)th element
+            return findKth(root, (n + 1) / 2);
+        } else {
+            // Even case: find (n/2)th element  
+            return findKth(root, n / 2);
+        }
+    }
+    
+    // Count total nodes in BST
+    private int countNodes(Node root) {
+        if (root == null) return 0;
+        return 1 + countNodes(root.left) + countNodes(root.right);
+    }
+    
+    // Find kth smallest element in BST using inorder traversal
+    private int findKth(Node root, int k) {
+        Node current = root;
+        int count = 0;
+        int result = -1;
+        
+        while (current != null) {
+            if (current.left == null) {
+                // Process current node
+                count++;
+                if (count == k) {
+                    result = current.data;
+                }
+                current = current.right;
+            } else {
+                // Find inorder predecessor
+                Node predecessor = current.left;
+                while (predecessor.right != null && predecessor.right != current) {
+                    predecessor = predecessor.right;
+                }
+                
+                if (predecessor.right == null) {
+                    // Make current as right child of predecessor
+                    predecessor.right = current;
+                    current = current.left;
+                } else {
+                    // Revert the changes
+                    predecessor.right = null;
+                    // Process current node
+                    count++;
+                    if (count == k) {
+                        result = current.data;
+                    }
+                    current = current.right;
+                }
+            }
+        }
+        return result;
+    }
+}
