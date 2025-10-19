@@ -1,0 +1,74 @@
+//K closest Values
+/*
+class Node {
+    int data;
+    Node left;
+    Node right;
+
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+*/
+
+class Solution {
+    public ArrayList<Integer> getKClosest(Node root, int target, int k) {
+        // Step 1: Get inorder traversal (sorted values)
+        ArrayList<Integer> inorder = new ArrayList<>();
+        inOrderTraversal(root, inorder);
+        
+        // Step 2: Find the position where target would be inserted
+        int left = 0, right = inorder.size() - 1;
+        int closestIndex = 0;
+        
+        // Binary search to find the closest element
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (inorder.get(mid) == target) {
+                closestIndex = mid;
+                break;
+            } else if (inorder.get(mid) < target) {
+                closestIndex = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        // Step 3: Use two pointers to find k closest elements
+        ArrayList<Integer> result = new ArrayList<>();
+        left = closestIndex;
+        right = closestIndex + 1;
+        
+        while (k > 0) {
+            if (left < 0) {
+                result.add(inorder.get(right++));
+            } else if (right >= inorder.size()) {
+                result.add(inorder.get(left--));
+            } else {
+                int diffLeft = Math.abs(inorder.get(left) - target);
+                int diffRight = Math.abs(inorder.get(right) - target);
+                
+                // If same absolute difference, choose smaller value
+                if (diffLeft < diffRight || (diffLeft == diffRight && inorder.get(left) < inorder.get(right))) {
+                    result.add(inorder.get(left--));
+                } else {
+                    result.add(inorder.get(right++));
+                }
+            }
+            k--;
+        }
+        
+        // The driver code will sort the result, so we don't need to sort here
+        return result;
+    }
+    
+    private void inOrderTraversal(Node root, ArrayList<Integer> list) {
+        if (root == null) return;
+        inOrderTraversal(root.left, list);
+        list.add(root.data);
+        inOrderTraversal(root.right, list);
+    }
+}
