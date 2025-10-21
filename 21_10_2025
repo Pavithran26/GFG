@@ -1,0 +1,31 @@
+//Top K Frequent in Array
+import java.util.*;
+
+class Solution {
+    public ArrayList<Integer> topKFreq(int[] arr, int k) {
+        // Count frequencies
+        Map<Integer, Integer> freqMap = new HashMap<>();
+        for (int num : arr) {
+            freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
+        }
+        
+        // Create a list of entries and sort based on frequency and value
+        List<Map.Entry<Integer, Integer>> entries = new ArrayList<>(freqMap.entrySet());
+        
+        // Sort: first by frequency descending, then by value descending
+        Collections.sort(entries, (a, b) -> {
+            if (a.getValue().equals(b.getValue())) {
+                return b.getKey() - a.getKey(); // Higher value first if frequencies are equal
+            }
+            return b.getValue() - a.getValue(); // Higher frequency first
+        });
+        
+        // Extract top k elements
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = 0; i < k; i++) {
+            result.add(entries.get(i).getKey());
+        }
+        
+        return result;
+    }
+}
