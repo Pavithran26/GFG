@@ -1,0 +1,29 @@
+//Nearly sorted
+import java.util.PriorityQueue;
+
+class Solution {
+    public void nearlySorted(int[] arr, int k) {
+        // Create a min-heap
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        
+        // Add first k+1 elements to the heap
+        for (int i = 0; i <= k && i < arr.length; i++) {
+            minHeap.add(arr[i]);
+        }
+        
+        int index = 0;
+        
+        // Process remaining elements
+        for (int i = k + 1; i < arr.length; i++) {
+            // Extract minimum from heap and place it at current index
+            arr[index++] = minHeap.poll();
+            // Add next element to heap
+            minHeap.add(arr[i]);
+        }
+        
+        // Extract remaining elements from heap
+        while (!minHeap.isEmpty()) {
+            arr[index++] = minHeap.poll();
+        }
+    }
+}
