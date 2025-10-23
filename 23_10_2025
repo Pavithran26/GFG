@@ -1,0 +1,33 @@
+//K Closest Points to Origin
+class Solution {
+    public ArrayList<ArrayList<Integer>> kClosest(int[][] points, int k) {
+        // Max heap to store points based on distance from origin
+        PriorityQueue<int[]> maxHeap = new PriorityQueue<>(
+            (a, b) -> Integer.compare(
+                (b[0]*b[0] + b[1]*b[1]), 
+                (a[0]*a[0] + a[1]*a[1])
+            )
+        );
+        
+        // Add points to the heap
+        for (int[] point : points) {
+            maxHeap.offer(point);
+            // If heap size exceeds k, remove the farthest point
+            if (maxHeap.size() > k) {
+                maxHeap.poll();
+            }
+        }
+        
+        // Convert result to ArrayList<ArrayList<Integer>>
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        while (!maxHeap.isEmpty()) {
+            int[] point = maxHeap.poll();
+            ArrayList<Integer> list = new ArrayList<>();
+            list.add(point[0]);
+            list.add(point[1]);
+            result.add(list);
+        }
+        
+        return result;
+    }
+}
