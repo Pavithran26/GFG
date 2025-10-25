@@ -1,0 +1,30 @@
+//Minimum Steps to Halve Sum
+import java.util.*;
+
+class Solution {
+    public int minOperations(int[] arr) {
+        double totalSum = 0;
+        PriorityQueue<Double> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        
+        // Calculate initial sum and add elements to max-heap
+        for (int num : arr) {
+            totalSum += num;
+            maxHeap.offer((double) num);
+        }
+        
+        double targetSum = totalSum / 2.0;
+        int operations = 0;
+        
+        // Keep halving largest elements until sum <= target
+        while (totalSum > targetSum) {
+            double largest = maxHeap.poll();
+            double halved = largest / 2.0;
+            
+            totalSum -= (largest - halved); // Reduce sum by the amount we removed
+            maxHeap.offer(halved);
+            operations++;
+        }
+        
+        return operations;
+    }
+}
