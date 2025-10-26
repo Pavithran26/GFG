@@ -1,0 +1,37 @@
+//Minimum Cost of ropes
+import java.util.PriorityQueue;
+
+class Solution {
+    public static int minCost(int[] arr) {
+        // If there's only one rope, no cost needed
+        if (arr.length == 1) {
+            return 0;
+        }
+        
+        // Create a min-heap (priority queue)
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        
+        // Add all rope lengths to the min-heap
+        for (int rope : arr) {
+            minHeap.add(rope);
+        }
+        
+        int totalCost = 0;
+        
+        // Continue until only one rope remains
+        while (minHeap.size() > 1) {
+            // Extract the two smallest ropes
+            int first = minHeap.poll();
+            int second = minHeap.poll();
+            
+            // Calculate cost to connect them
+            int cost = first + second;
+            totalCost += cost;
+            
+            // Add the new rope back to the heap
+            minHeap.add(cost);
+        }
+        
+        return totalCost;
+    }
+}
