@@ -1,0 +1,59 @@
+//Distance of nearest cell having 1
+import java.util.*;
+
+class Solution {
+    public ArrayList<ArrayList<Integer>> nearest(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        
+        // Create result matrix
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            ArrayList<Integer> row = new ArrayList<>();
+            for (int j = 0; j < m; j++) {
+                row.add(-1); // Initialize with -1 (unvisited)
+            }
+            result.add(row);
+        }
+        
+        // Queue for BFS
+        Queue<int[]> queue = new LinkedList<>();
+        
+        // Add all cells with 1 to queue and set their distance to 0
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    queue.offer(new int[]{i, j});
+                    result.get(i).set(j, 0);
+                }
+            }
+        }
+        
+        // Directions: up, right, down, left
+        int[][] directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+        
+        // Perform BFS
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            int row = cell[0];
+            int col = cell[1];
+            int currentDistance = result.get(row).get(col);
+            
+            // Check all four directions
+            for (int[] dir : directions) {
+                int newRow = row + dir[0];
+                int newCol = col + dir[1];
+                
+                // Check if new position is valid and not visited
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m 
+                    && result.get(newRow).get(newCol) == -1) {
+                    
+                    result.get(newRow).set(newCol, currentDistance + 1);
+                    queue.offer(new int[]{newRow, newCol});
+                }
+            }
+        }
+        
+        return result;
+    }
+}
