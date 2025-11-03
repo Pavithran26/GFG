@@ -1,0 +1,71 @@
+//Safe States
+import java.util.*;
+
+class Solution {
+    public ArrayList<Integer> safeNodes(int V, int[][] edges) {
+        // Create adjacency list for the graph
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            graph.add(new ArrayList<>());
+        }
+        
+        // Build the graph
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            graph.get(u).add(v);
+        }
+        
+        // Arrays to track visited nodes and nodes in current recursion stack
+        boolean[] visited = new boolean[V];
+        boolean[] inStack = new boolean[V];
+        boolean[] unsafe = new boolean[V]; // true if node is in cycle or leads to cycle
+        
+        // Check each node for cycles
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                dfs(i, graph, visited, inStack, unsafe);
+            }
+        }
+        
+        // Collect safe nodes (nodes that are not unsafe)
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            if (!unsafe[i]) {
+                result.add(i);
+            }
+        }
+        
+        return result;
+    }
+    
+    private boolean dfs(int node, List<List<Integer>> graph, boolean[] visited, 
+                       boolean[] inStack, boolean[] unsafe) {
+        // If node is already in recursion stack, cycle detected
+        if (inStack[node]) {
+            unsafe[node] = true;
+            return true;
+        }
+        
+        // If already visited and processed
+        if (visited[node]) {
+            return unsafe[node];
+        }
+        
+        // Mark as visited and add to recursion stack
+        visited[node] = true;
+        inStack[node] = true;
+        
+        // Visit all neighbors
+        for (int neighbor : graph.get(node)) {
+            if (dfs(neighbor, graph, visited, inStack, unsafe)) {
+                unsafe[node] = true;
+            }
+        }
+        
+        // Remove from recursion stack
+        inStack[node] = false;
+        
+        return unsafe[node];
+    }
+}
