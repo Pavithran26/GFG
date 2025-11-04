@@ -1,0 +1,28 @@
+//Frog Jump
+class Solution {
+    public int minCost(int[] height) {
+        int n = height.length;
+        if (n <= 1) return 0;
+        
+        // dp[i] represents minimum cost to reach stair i
+        int[] dp = new int[n];
+        
+        // Base cases
+        dp[0] = 0; // Already at first stair, cost = 0
+        dp[1] = Math.abs(height[1] - height[0]); // Only one way to reach second stair
+        
+        // Fill dp array
+        for (int i = 2; i < n; i++) {
+            // Option 1: Jump from i-1 to i
+            int cost1 = dp[i-1] + Math.abs(height[i] - height[i-1]);
+            
+            // Option 2: Jump from i-2 to i  
+            int cost2 = dp[i-2] + Math.abs(height[i] - height[i-2]);
+            
+            // Take minimum of both options
+            dp[i] = Math.min(cost1, cost2);
+        }
+        
+        return dp[n-1];
+    }
+}
