@@ -1,0 +1,52 @@
+//Number of paths in a matrix with k coins
+class Solution {
+    public int numberOfPath(int[][] mat, int k) {
+        int n = mat.length;
+        int m = mat[0].length;
+        
+        // DP table: dp[i][j][sum] = ways to reach (i,j) with exactly 'sum' coins
+        // But since k can be up to 100, and we only care about sums ≤ k in our path to destination
+        // we can limit the sum dimension to k+1
+        
+        Integer[][][] dp = new Integer[n][m][k + 1];
+        return solve(mat, 0, 0, 0, k, dp);
+    }
+    
+    private int solve(int[][] mat, int i, int j, int currentSum, int k, Integer[][][] dp) {
+        int n = mat.length;
+        int m = mat[0].length;
+        
+        // Base case: out of bounds or sum exceeds k
+        if (i >= n || j >= m || currentSum > k) {
+            return 0;
+        }
+        
+        // Add current cell's coins
+        int newSum = currentSum + mat[i][j];
+        
+        // If sum exceeds k, no valid path
+        if (newSum > k) {
+            return 0;
+        }
+        
+        // Check memoization
+        if (dp[i][j][currentSum] != null) {
+            return dp[i][j][currentSum];
+        }
+        
+        // Base case: reached destination
+        if (i == n - 1 && j == m - 1) {
+            if (newSum == k) {
+                return 1;
+            }
+            return 0;
+        }
+        
+        // Move right and down
+        int right = solve(mat, i, j + 1, newSum, k, dp);
+        int down = solve(mat, i + 1, j, newSum, k, dp);
+        
+        dp[i][j][currentSum] = right + down;
+        return dp[i][j][currentSum];
+    }
+}
