@@ -1,0 +1,67 @@
+//Chocolate Pickup II
+class Solution {
+    public int chocolatePickup(int[][] mat) {
+        int n = mat.length;
+        
+        if (mat[0][0] == -1 || mat[n-1][n-1] == -1) {
+            return 0;
+        }
+        
+        // dp[i][j] = max chocolates when person1 at row i, person2 at row j
+        int[][] dp = new int[n][n];
+        
+        // Initialize with -1
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        
+        dp[0][0] = mat[0][0];
+        
+        for (int k = 1; k < 2*n - 1; k++) {
+            int[][] temp = new int[n][n];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    temp[i][j] = -1;
+                }
+            }
+            
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (dp[i][j] == -1) continue;
+                    
+                    // All 4 move combinations
+                    for (int di = 0; di <= 1; di++) {
+                        for (int dj = 0; dj <= 1; dj++) {
+                            int ni = i + di;
+                            int nj = j + dj;
+                            
+                            if (ni < n && nj < n && 
+                                k - ni >= 0 && k - ni < n && 
+                                k - nj >= 0 && k - nj < n &&
+                                mat[ni][k - ni] != -1 && 
+                                mat[nj][k - nj] != -1) {
+                                
+                                int chocolates = dp[i][j];
+                                
+                                if (ni == nj) {
+                                    chocolates += mat[ni][k - ni];
+                                } else {
+                                    chocolates += mat[ni][k - ni] + mat[nj][k - nj];
+                                }
+                                
+                                if (chocolates > temp[ni][nj]) {
+                                    temp[ni][nj] = chocolates;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            dp = temp;
+        }
+        
+        return dp[n-1][n-1] == -1 ? 0 : dp[n-1][n-1];
+    }
+}
