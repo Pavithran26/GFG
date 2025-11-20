@@ -1,0 +1,70 @@
+//Make Strings Equal
+class Solution {
+    public int minCost(String s, String t, char[][] transform, int[] cost) {
+        int n = s.length();
+        int INF = Integer.MAX_VALUE / 2;
+        
+        // Create a 26x26 cost matrix
+        int[][] dist = new int[26][26];
+        
+        // Initialize the distance matrix
+        for (int i = 0; i < 26; i++) {
+            for (int j = 0; j < 26; j++) {
+                if (i == j) {
+                    dist[i][j] = 0; // Same character costs 0
+                } else {
+                    dist[i][j] = INF; // Initialize with infinity
+                }
+            }
+        }
+        
+        // Add given transformations
+        for (int i = 0; i < transform.length; i++) {
+            int from = transform[i][0] - 'a';
+            int to = transform[i][1] - 'a';
+            dist[from][to] = Math.min(dist[from][to], cost[i]);
+        }
+        
+        // Floyd-Warshall algorithm to find all pairs shortest paths
+        for (int k = 0; k < 26; k++) {
+            for (int i = 0; i < 26; i++) {
+                for (int j = 0; j < 26; j++) {
+                    if (dist[i][k] < INF && dist[k][j] < INF) {
+                        dist[i][j] = Math.min(dist[i][j], dist[i][k] + dist[k][j]);
+                    }
+                }
+            }
+        }
+        
+        long totalCost = 0;
+        
+        // For each character position
+        for (int i = 0; i < n; i++) {
+            int charS = s.charAt(i) - 'a';
+            int charT = t.charAt(i) - 'a';
+            
+            // If characters are already equal
+            if (charS == charT) {
+                continue;
+            }
+            
+            int minCost = INF;
+            
+            // Try to transform both characters to each possible common character
+            for (int common = 0; common < 26; common++) {
+                if (dist[charS][common] < INF && dist[charT][common] < INF) {
+                    minCost = Math.min(minCost, dist[charS][common] + dist[charT][common]);
+                }
+            }
+            
+            // If no common character found, return -1
+            if (minCost == INF) {
+                return -1;
+            }
+            
+            totalCost += minCost;
+        }
+        
+        return (int) totalCost;
+    }
+}
