@@ -1,0 +1,70 @@
+//Shortest Path Using Atmost One Curved Edge
+import java.util.*;
+
+class Solution {
+    public int shortestPath(int V, int a, int b, int[][] edges) {
+        // Build adjacency list for straight edges
+        List<List<int[]>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+        
+        for (int[] edge : edges) {
+            int u = edge[0], v = edge[1], w1 = edge[2];
+            adj.get(u).add(new int[]{v, w1});
+            adj.get(v).add(new int[]{u, w1});
+        }
+        
+        // Dijkstra from a using only straight edges
+        int[] distA = dijkstra(V, a, adj);
+        
+        // Dijkstra from b using only straight edges  
+        int[] distB = dijkstra(V, b, adj);
+        
+        // Initialize answer with path using only straight edges
+        int ans = distA[b] == Integer.MAX_VALUE ? Integer.MAX_VALUE : distA[b];
+        
+        // Try all possible curved edges
+        for (int[] edge : edges) {
+            int u = edge[0], v = edge[1], w2 = edge[3];
+            
+            // Use curved edge from u to v
+            if (distA[u] != Integer.MAX_VALUE && distB[v] != Integer.MAX_VALUE) {
+                ans = Math.min(ans, distA[u] + w2 + distB[v]);
+            }
+            
+            // Use curved edge from v to u
+            if (distA[v] != Integer.MAX_VALUE && distB[u] != Integer.MAX_VALUE) {
+                ans = Math.min(ans, distA[v] + w2 + distB[u]);
+            }
+        }
+        
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+    
+    private int[] dijkstra(int V, int src, List<List<int[]>> adj) {
+        int[] dist = new int[V];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[src] = 0;
+        
+        PriorityQueue<int[]> pq = new PriorityQueue<>((x, y) -> x[1] - y[1]);
+        pq.offer(new int[]{src, 0});
+        
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            int u = curr[0], d = curr[1];
+            
+            if (d > dist[u]) continue;
+            
+            for (int[] neighbor : adj.get(u)) {
+                int v = neighbor[0], w = neighbor[1];
+                if (dist[v] > dist[u] + w) {
+                    dist[v] = dist[u] + w;
+                    pq.offer(new int[]{v, dist[v]});
+                }
+            }
+        }
+        
+        return dist;
+    }
+}
