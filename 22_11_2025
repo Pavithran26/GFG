@@ -1,0 +1,182 @@
+//Minimum Operations to Connect Hospitals
+class Solution {
+    public int minConnect(int V, int[][] edges) {
+        int E = edges.length;
+        
+        // If not enough edges to form a spanning tree
+        if (E < V - 1) {
+            return -1;
+        }
+        
+        UnionFind uf = new UnionFind(V);
+        
+        // Count connected components and spare edges
+        int spareEdges = 0;
+        
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            
+            if (uf.find(u) == uf.find(v)) {
+                // This edge is redundant (creates a cycle)
+                spareEdges++;
+            } else {
+                uf.union(u, v);
+            }
+        }
+        
+        int components = uf.getComponents();
+        
+        // We need (components - 1) edges to connect all components
+        if (spareEdges >= components - 1) {
+            return components - 1;
+        }
+        
+        return -1;
+    }
+    
+    class UnionFind {
+        private int[] parent;
+        private int[] rank;
+        private int components;
+        
+        public UnionFind(int n) {
+            parent = new int[n];
+            rank = new int[n];
+            components = n;
+            
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                rank[i] = 0;
+            }
+        }
+        
+        public int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+        
+        public void union(int x, int y) {
+            int rootX = find(x);
+            int rootY = find(y);
+            
+            if (rootX != rootY) {
+                if (rank[rootX] < rank[rootY]) {
+                    parent[rootX] = rootY;
+                } else if (rank[rootX] > rank[rootY]) {
+                    parent[rootY] = rootX;
+                } else {
+                    parent[rootY] = rootX;
+                    rank[rootX]++;
+                }
+                components--;
+            }
+        }
+        
+        public int getComponents() {
+            return components;
+        }
+    }
+}class Solution {
+    public int minConnect(int V, int[][] edges) {
+        int E = edges.length;
+        
+        // If not enough edges to form a spanning tree
+        if (E < V - 1) {
+            return -1;
+        }
+        
+        UnionFind uf = new UnionFind(V);
+        
+        // Count connected components and spare edges
+        int spareEdges = 0;
+        
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            
+            if (uf.find(u) == uf.find(v)) {
+                // This edge is redundant (creates a cycle)
+                spareEdges++;
+            } else {
+                uf.union(u, v);
+            }
+        }
+        
+        int components = uf.getComponents();
+        
+        // We need (components - 1) edges to connect all components
+        if (spareEdges >= components - 1) {
+            return components - 1;
+        }
+        
+        return -1;
+    }
+    
+    class UnionFind {
+        private int[] parent;
+        private int[] rank;
+        private int components;
+        
+        public UnionFind(int n) {
+            parent = new int[n];
+            rank = new int[n];
+            components = n;
+            
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                rank[i] = 0;
+            }
+        }
+        
+        public int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+        
+        public void union(int x, int y) {
+            int rootX = find(x);
+            int rootY = find(y);
+            
+            if (rootX != rootY) {
+                if (rank[rootX] < rank[rootY]) {
+                    parent[rootX] = rootY;
+                } else if (rank[rootX] > rank[rootY]) {
+                    parent[rootY] = rootX;
+                } else {
+                    parent[rootY] = rootX;
+                    rank[rootX]++;
+                }
+                components--;
+            }
+        }
+        
+        public int getComponents() {
+            return components;
+        }
+    }
+}class Solution {
+    public int minimumOperations(int[] nums) {
+        int totalOperations = 0;
+      
+        // Iterate through each number in the array
+        for (int number : nums) {
+            // Calculate the remainder when divided by 3
+            int remainder = number % 3;
+          
+            // If the number is not divisible by 3, we need operations
+            if (remainder != 0) {
+                // We can either subtract the remainder to reach a multiple of 3
+                // or add (3 - remainder) to reach the next multiple of 3
+                // Choose the minimum of these two options
+                totalOperations += Math.min(remainder, 3 - remainder);
+            }
+        }
+      
+        return totalOperations;
+    }
+}
