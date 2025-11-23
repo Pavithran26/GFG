@@ -1,0 +1,61 @@
+//Maximum Stone Removal
+class Solution {
+    public int maxRemove(int[][] stones) {
+        int n = stones.length;
+        
+        // We'll use union-find to group stones that share rows or columns
+        int[] parent = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+        
+        // Use maps to track the last stone we saw in each row and column
+        Map<Integer, Integer> rowMap = new HashMap<>();
+        Map<Integer, Integer> colMap = new HashMap<>();
+        
+        for (int i = 0; i < n; i++) {
+            int row = stones[i][0];
+            int col = stones[i][1];
+            
+            // If we've seen a stone in this row before, union with it
+            if (rowMap.containsKey(row)) {
+                union(parent, i, rowMap.get(row));
+            } else {
+                rowMap.put(row, i);
+            }
+            
+            // If we've seen a stone in this column before, union with it
+            if (colMap.containsKey(col)) {
+                union(parent, i, colMap.get(col));
+            } else {
+                colMap.put(col, i);
+            }
+        }
+        
+        // Count number of connected components
+        int components = 0;
+        for (int i = 0; i < n; i++) {
+            if (find(parent, i) == i) {
+                components++;
+            }
+        }
+        
+        // Maximum stones we can remove = total stones - number of components
+        return n - components;
+    }
+    
+    private int find(int[] parent, int x) {
+        if (parent[x] != x) {
+            parent[x] = find(parent, parent[x]);
+        }
+        return parent[x];
+    }
+    
+    private void union(int[] parent, int x, int y) {
+        int rootX = find(parent, x);
+        int rootY = find(parent, y);
+        if (rootX != rootY) {
+            parent[rootX] = rootY;
+        }
+    }
+}
