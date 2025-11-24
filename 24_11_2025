@@ -1,0 +1,117 @@
+//Second Best Minimum Spanning Tree
+import java.util.*;
+
+class Solution {
+    public int secondMST(int V, int[][] edges) {
+        // First, find the MST using Kruskal's algorithm
+        int mstWeight = findMST(V, edges);
+        if (mstWeight == -1) return -1; // If no MST exists
+        
+        int secondBest = Integer.MAX_VALUE;
+        
+        // For each edge in the MST, try excluding it and find the best replacement
+        List<int[]> mstEdges = getMSTEdges(V, edges);
+        
+        for (int[] excludedEdge : mstEdges) {
+            // Find MST without the excluded edge
+            int currentWeight = findMSTWithoutEdge(V, edges, excludedEdge);
+            if (currentWeight > mstWeight && currentWeight < secondBest) {
+                secondBest = currentWeight;
+            }
+        }
+        
+        return secondBest == Integer.MAX_VALUE ? -1 : secondBest;
+    }
+    
+    private int findMST(int V, int[][] edges) {
+        Arrays.sort(edges, (a, b) -> a[2] - b[2]);
+        UnionFind uf = new UnionFind(V);
+        int weight = 0;
+        int edgesUsed = 0;
+        
+        for (int[] edge : edges) {
+            if (uf.union(edge[0], edge[1])) {
+                weight += edge[2];
+                edgesUsed++;
+                if (edgesUsed == V - 1) break;
+            }
+        }
+        
+        return edgesUsed == V - 1 ? weight : -1;
+    }
+    
+    private List<int[]> getMSTEdges(int V, int[][] edges) {
+        Arrays.sort(edges, (a, b) -> a[2] - b[2]);
+        UnionFind uf = new UnionFind(V);
+        List<int[]> mstEdges = new ArrayList<>();
+        
+        for (int[] edge : edges) {
+            if (uf.union(edge[0], edge[1])) {
+                mstEdges.add(edge);
+                if (mstEdges.size() == V - 1) break;
+            }
+        }
+        
+        return mstEdges;
+    }
+    
+    private int findMSTWithoutEdge(int V, int[][] edges, int[] excludedEdge) {
+        Arrays.sort(edges, (a, b) -> a[2] - b[2]);
+        UnionFind uf = new UnionFind(V);
+        int weight = 0;
+        int edgesUsed = 0;
+        
+        for (int[] edge : edges) {
+            // Skip the excluded edge
+            if (edge[0] == excludedEdge[0] && edge[1] == excludedEdge[1] && edge[2] == excludedEdge[2]) {
+                continue;
+            }
+            
+            if (uf.union(edge[0], edge[1])) {
+                weight += edge[2];
+                edgesUsed++;
+                if (edgesUsed == V - 1) break;
+            }
+        }
+        
+        return edgesUsed == V - 1 ? weight : Integer.MAX_VALUE;
+    }
+    
+    class UnionFind {
+        int[] parent;
+        int[] rank;
+        
+        public UnionFind(int n) {
+            parent = new int[n];
+            rank = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+            }
+        }
+        
+        public int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+        
+        public boolean union(int x, int y) {
+            int rootX = find(x);
+            int rootY = find(y);
+            
+            if (rootX == rootY) return false;
+            
+            if (rank[rootX] < rank[rootY]) {
+                parent[rootX] = rootY;
+            } else if (rank[rootX] > rank[rootY]) {
+                parent[rootY] = rootX;
+            } else {
+                parent[rootY] = rootX;
+                rank[rootX]++;
+            }
+            
+            return true;
+        }
+    }
+}
