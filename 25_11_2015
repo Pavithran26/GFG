@@ -1,0 +1,19 @@
+//Game of XOR
+class Solution {
+    public int subarrayXor(int[] arr) {
+        int n = arr.length;
+        
+        // If array length is even, result is always 0
+        if (n % 2 == 0) {
+            return 0;
+        }
+        
+        // If array length is odd, result is XOR of elements at even indices
+        int result = 0;
+        for (int i = 0; i < n; i += 2) {
+            result ^= arr[i];
+        }
+        
+        return result;
+    }
+}
