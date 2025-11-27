@@ -1,0 +1,26 @@
+//All Subsets Xor Sum
+class Solution {
+    int subsetXORSum(int arr[]) {
+        int n = arr.length;
+        int total = 0;
+        
+        // Consider each bit position
+        for (int i = 0; i < 32; i++) {
+            int count = 0;
+            
+            // Count numbers with i-th bit set
+            for (int num : arr) {
+                if ((num & (1 << i)) != 0) {
+                    count++;
+                }
+            }
+            
+            // If at least one number has this bit set
+            if (count > 0) {
+                total += (1 << i) * (1 << (n - 1));
+            }
+        }
+        
+        return total;
+    }
+}
