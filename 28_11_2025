@@ -1,0 +1,42 @@
+//Subset XOR
+class Solution {
+    public static ArrayList<Integer> subsetXOR(int n) {
+        ArrayList<Integer> result = new ArrayList<>();
+        
+        // Case 1: n % 4 == 0 - take all numbers from 1 to n
+        if (n % 4 == 0) {
+            for (int i = 1; i <= n; i++) {
+                result.add(i);
+            }
+        }
+        // Case 2: n % 4 == 3 - take all numbers except n
+        else if (n % 4 == 3) {
+            for (int i = 1; i <= n - 1; i++) {
+                result.add(i);
+            }
+        }
+        // Case 3: n % 4 == 1 or 2 - need special handling
+        else {
+            // For n % 4 == 1: XOR(1..n) = 1, but we need n
+            // For n % 4 == 2: XOR(1..n) = n+1, but we need n
+            
+            // Calculate XOR of all numbers from 1 to n
+            int totalXOR = 0;
+            for (int i = 1; i <= n; i++) {
+                totalXOR ^= i;
+            }
+            
+            // We need to remove the number that equals (totalXOR ^ n)
+            int remove = totalXOR ^ n;
+            
+            // Add all numbers except the one to remove
+            for (int i = 1; i <= n; i++) {
+                if (i != remove) {
+                    result.add(i);
+                }
+            }
+        }
+        
+        return result;
+    }
+}
