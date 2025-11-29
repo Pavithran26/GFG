@@ -1,0 +1,32 @@
+//Count set bits
+class Solution {
+    public static int countSetBits(int n) {
+        if (n == 0) return 0;
+        
+        int count = 0;
+        
+        // Find the highest power of 2 less than or equal to n
+        int x = highestPowerOf2(n);
+        
+        // Count set bits in numbers from 1 to (2^x - 1)
+        int bitsTill2x = x * (1 << (x - 1));
+        
+        // Count MSB (most significant bit) for numbers from 2^x to n
+        int msbCount = n - (1 << x) + 1;
+        
+        // Recursively count for remaining numbers
+        int remaining = n - (1 << x);
+        
+        count = bitsTill2x + msbCount + countSetBits(remaining);
+        
+        return count;
+    }
+    
+    private static int highestPowerOf2(int n) {
+        int x = 0;
+        while ((1 << x) <= n) {
+            x++;
+        }
+        return x - 1;
+    }
+}
